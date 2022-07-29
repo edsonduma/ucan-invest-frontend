@@ -3,7 +3,7 @@ import Switch from "@mui/material/Switch";
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
 
-export default function Home() {
+const Home = () => {
  return (
    <div className={styles.container}>
      <div>
@@ -15,3 +15,5 @@ export default function Home() {
    </div>
  );
 }
+
+export default Home

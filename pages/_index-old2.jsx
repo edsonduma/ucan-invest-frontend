@@ -27,7 +27,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '} EBDuma
+          Powered by{' '} UCAN
         </a>
       </footer>
     </div>
