@@ -100,7 +100,7 @@ export default function Album() {
               Projectos de Investigação da UCAN
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              Esta é uma pequena apresentação dos varios projectos que a ucan produz no seu dia a dia.
+              Esta é uma pequena apresentação dos vários projectos que a ucan produz no seu dia a dia.
             </Typography>
             {/* <Stack
               sx={{ pt: 4 }}

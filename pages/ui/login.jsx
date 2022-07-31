@@ -99,8 +99,29 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 28, mb: 4 }} />
+        {/* <Copyright sx={{ mt: 28, mb: 4 }} /> */}
       </Container>
+      
+      {/* Footer */}
+      <Box
+        style={{ marginTop: '28.5vh' }}
+        component="footer"
+        sx={{
+          py: 3,
+          px: 2,
+          mt: 'auto',
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'light'
+              ? theme.palette.grey[200]
+              : theme.palette.grey[800],
+        }}
+      >
+        <Container maxWidth="sm">
+          <Copyright />
+        </Container>
+      </Box>
+      {/* End footer */}
+
     </ThemeProvider>
   );
 }
