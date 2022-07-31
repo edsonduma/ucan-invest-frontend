@@ -14,6 +14,7 @@ const MyApp = ({
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
+      {/* <ThemeProvider> */}
         <Component {...pageProps} />
       </ThemeProvider>
     </CacheProvider>
