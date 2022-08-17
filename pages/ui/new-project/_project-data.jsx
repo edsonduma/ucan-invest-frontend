@@ -7,8 +7,49 @@ import Checkbox from '@mui/material/Checkbox';
 import { Button } from '@mui/material';
 import FileInput from './_file-input';
 import AttachmentIcon from '@mui/icons-material/Attachment';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function ProjectData() {
+
+  const [title, setTitle] = useState('')
+  const [subtitle, setSubtitle] = useState('')
+  const [pdfFile, setPdfFile] = useState('')
+
+  // const [projectData, setProjectData] = useState({
+  //   "title": "",
+  //   "subtitle": "",
+  //   "pdfFile": "",
+  // })
+
+  // useEffect(() => {
+
+  //   fetch(`${process.env.NEXT_PUBLUC_}/projects`, {
+  //     method: 'POST',
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: {
+  //       "title": title,
+  //       "subtitle": subtitle,
+  //       "pdfFile": pdfFile,
+  //     }
+  //   })
+  //     .t 
+
+  // }, [])
+
+  // useEffect(() => {
+
+  //   fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       console.log('data: ', data)
+  //       setProjects(data)
+  //     })
+
+  // }, [])
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
