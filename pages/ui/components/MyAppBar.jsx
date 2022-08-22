@@ -8,9 +8,15 @@ export default function MyAppBar() {
             <CssBaseline />
             <AppBar position="relative">
                 <Toolbar>
-                    <MonetizationOnIcon sx={{ mr: 2 }} />
+                    {/* <MonetizationOnIcon sx={{ mr: 2 }} /> */}
+                    <img src="/img/logoCEIC.jpg" alt="ucanic" style={{
+                        maxWidth: 120,
+                        marginRight: '10px',
+                        borderRadius:'30px',
+                        boxShadow: '1px 2px 9px black'
+                    }}  />
                     <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                        UCAN Projects
+                        {/* UCAN Projects */}
                     </Typography>
                     <nav>
                         {/* <Box sx={{ bgcolor: 'primary.main' }}>

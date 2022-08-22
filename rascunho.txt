@@ -1,0 +1,24 @@
+/faculties
+
+"https://iscientfic.herokuapp.com"
+
+/area-activity
+{
+  "pkAreaOfActivity": 0,
+  "designation": "string"
+}
+
+/places
+{
+    "pkLocality": 0,
+    "designation": "string"
+}
+
+/projects
+{
+  "pkProject": 0,
+  "title": "string",
+  "subtitle": "string",
+  "pdfFile": "string"
+}
+

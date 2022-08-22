@@ -24,14 +24,35 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    
-    if (data.get('email') === 'ucanadmin')
-      if (data.get('password') === 'ucan1234')
+    // console.log({
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    // });
+
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/account/login`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: data.get('email'),
+        password: data.get('password'),
+      })
+    }).then(res => res.json())
+    .then(data => {
+      console.log('6:data: ', data)
+
+      if (data)
         router.push('/ui/projects');
+      else
+        alert('Login falhou!')
+    }).catch(error => {
+      console.log('1:error ', error)
+      throw(error)
+    })
+    
+    // if (data.get('email') === 'ucanadmin')
+    //   if (data.get('password') === 'ucan1234')
   };
 
   return (
