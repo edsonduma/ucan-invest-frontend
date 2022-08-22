@@ -22,3 +22,19 @@
   "pdfFile": "string"
 }
 
+PESSOA:
+numBI
+    nome
+    sobrenome
+    dataDascimento
+LOCALIDADE
+    rua
+    numCasa
+NIVEL_ACADEMICO
+
+
+"firstname": "string",
+"lastname": "string",
+"birthday_date": "2022-08-21T17:29:04.381Z",
+"street": "string",
+"houseNumber": "string",

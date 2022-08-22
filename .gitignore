@@ -31,4 +31,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# my files
 pages/ui/others
+rascunho.txt
+# *yarn.lock
+yarn.lock.*
+pages/menu.jsx
