@@ -45,7 +45,7 @@ export default function NewResearcher() {
   const [localities, setLocalities] = useState([])
 
   // data of account
-  const [typeOfAccountSelected, setTypeOfAccountSelected] = useState(1)
+  const [typeOfAccountSelected, setTypeOfAccountSelected] = useState(2)
   const [myLocality, setMyLocality] = useState(1)
   const [district, setDistrict] = useState(1)
 
@@ -178,6 +178,9 @@ export default function NewResearcher() {
         // setBirthdayDate('')
         // setStreet('')
         // setHouseNumber('')
+
+        setAccount({})
+        setPerson({})
 
         alert('cadastrado com sucesso!')
       }

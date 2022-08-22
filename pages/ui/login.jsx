@@ -29,6 +29,8 @@ export default function SignIn() {
     //   password: data.get('password'),
     // });
 
+    console.log('BaseURI: ', process.env.NEXT_PUBLIC_BASE_URI);
+
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/account/login`, {
       method: 'POST',
       headers: {
@@ -39,18 +41,20 @@ export default function SignIn() {
         password: data.get('password'),
       })
     }).then(res => res.json())
-    .then(data => {
-      console.log('6:data: ', data)
+      .then(data => {
+        console.log('6:data: ', data)
 
-      if (data)
-        router.push('/ui/projects');
-      else
-        alert('Login falhou!')
-    }).catch(error => {
-      console.log('1:error ', error)
-      throw(error)
-    })
-    
+        if (data)
+          router.push('/ui/projects');
+        else
+          alert('Login falhou!')
+          
+      }).catch(error => {
+        console.log('1:error ', error)
+        alert('Ocorreu um erro no servidor!')
+        throw (error)
+      })
+
     // if (data.get('email') === 'ucanadmin')
     //   if (data.get('password') === 'ucan1234')
   };
@@ -122,7 +126,7 @@ export default function SignIn() {
         </Box>
         {/* <Copyright sx={{ mt: 28, mb: 4 }} /> */}
       </Container>
-      
+
       {/* Footer */}
       <Box
         style={{ marginTop: '28.5vh' }}

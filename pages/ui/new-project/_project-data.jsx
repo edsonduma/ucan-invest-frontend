@@ -12,15 +12,31 @@ import { useEffect } from 'react';
 
 export default function ProjectData() {
 
-  const [title, setTitle] = useState('')
-  const [subtitle, setSubtitle] = useState('')
-  const [pdfFile, setPdfFile] = useState('')
+  const [investigators, setInvestigators] = useState([])
 
-  // const [projectData, setProjectData] = useState({
-  //   "title": "",
-  //   "subtitle": "",
-  //   "pdfFile": "",
-  // })
+  // const [title, setTitle] = useState('')
+  // const [subtitle, setSubtitle] = useState('')
+  // const [pdfFile, setPdfFile] = useState('')
+
+  const [projectData, setProjectData] = useState({
+    title: "",
+    subtitle: "",
+    pdfFile: "",
+    teamLeader: {
+      pkInvestigator: 0,
+    }
+  })
+
+  useEffect(() => {
+
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
+    .then(res => res.json())
+    .then(data => {
+      console.log('data: ', data)
+      setProjectData(data)
+    })
+
+  }, [])
 
   // useEffect(() => {
 
@@ -39,17 +55,6 @@ export default function ProjectData() {
 
   // }, [])
 
-  // useEffect(() => {
-
-  //   fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       console.log('data: ', data)
-  //       setProjects(data)
-  //     })
-
-  // }, [])
-
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -63,7 +68,7 @@ export default function ProjectData() {
             name="firstName"
             label="First name"
             fullWidth
-            autoComplete="given-name"
+     e      autoComplete="given-name"
             variant="standard"
           />
         </Grid>
