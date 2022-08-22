@@ -85,13 +85,24 @@ export default function Album() {
                 <Card
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                 >
-                  <CardMedia
+                  {/* <CardMedia
                     component="img"
                     sx={{
                       // 16:9
                       pt: '56.25%',
                     }}
                     image="https://source.unsplash.com/random"
+                    alt="random"
+                  /> */}
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      // 16:9
+                      pt: '56.25%',
+                    }}
+                    // image="https://source.unsplash.com/random"
+                    // image="logoCEIC.jpg"
+                    image="/img/logoCEIC.jpg"
                     alt="random"
                   />
                   <CardContent sx={{ flexGrow: 1 }}>

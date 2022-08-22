@@ -9,11 +9,14 @@ export default function MyAppBar() {
             <AppBar position="relative">
                 <Toolbar>
                     {/* <MonetizationOnIcon sx={{ mr: 2 }} /> */}
-                    <img src="/img/logoCEIC.jpg" alt="ucanic" style={{
-                        maxWidth: 120,
+                    {/* <img src="/img/logoCEIC.jpg" alt="ucanic" style={{ */}
+                    <img src="/img/logo.png" alt="ucanic" style={{
+                        maxWidth: 160,
                         marginRight: '10px',
-                        borderRadius:'30px',
-                        boxShadow: '1px 2px 9px black'
+                        padding: '0.3em',
+                        borderRadius:'5em',
+                        boxShadow: '1px 2px 9px black',
+                        backgroundColor: 'white'
                     }}  />
                     <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
                         {/* UCAN Projects */}
