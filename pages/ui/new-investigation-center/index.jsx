@@ -12,7 +12,8 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AddressForm from './_project-data';
+import AddressForm from './_center-data';
+import AddInvestigadors from './_add-investigators';
 import Review from './_review';
 import MyAppBar from '../components/MyAppBar';
 import Copyright from '../components/Copyright';
@@ -30,13 +31,15 @@ import Copyright from '../components/Copyright';
 //   );
 // }
 
-const steps = ['Dados do Projecto', 'Rever os Dados'];
+const steps = ['Dados do Centro', 'Investigadores', 'Rever os Dados'];
 
 function getStepContent(step) {
   switch (step) {
     case 0:
       return <AddressForm />;
     case 1:
+      return <AddInvestigadors />;
+    case 2:
       return <Review />;
     default:
       throw new Error('Passo desconhecido');
@@ -79,7 +82,7 @@ export default function NewProject() {
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <Typography component="h1" variant="h4" align="center">
-            Novo Projecto
+            Novo Centro de Investigação
           </Typography>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
             {steps.map((label) => (
@@ -95,7 +98,7 @@ export default function NewProject() {
                   Cadastro concluido.
                 </Typography>
                 <Typography variant="subtitle1">
-                  O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.
+                  O centro número #1234 foi criado com sucesso e será publicado após aprovação do conselho.
                 </Typography>
               </React.Fragment>
             ) : (

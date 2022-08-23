@@ -2,17 +2,25 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { Button } from '@mui/material';
-import FileInput from './_file-input';
-import AttachmentIcon from '@mui/icons-material/Attachment';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { createTheme, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { useState, useEffect } from 'react';
 
-export default function ProjectData() {
+const theme = createTheme();
 
-  const [investigators, setInvestigators] = useState([])
+function getStyles(item, typeOfAccount, theme) {
+  return {
+    fontWeight:
+    typeOfAccount.indexOf(item) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+export default function ProjectData({ investigators }) {
+
+  // const [investigators, setInvestigators] = useState([])
+
+  const [teamLeaderSelected, setTeamLeaderSelected] = useState('')
 
   // const [title, setTitle] = useState('')
   // const [subtitle, setSubtitle] = useState('')
@@ -29,12 +37,14 @@ export default function ProjectData() {
 
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
-    .then(res => res.json())
-    .then(data => {
-      console.log('data: ', data)
-      setProjectData(data)
-    })
+    // console.log('2:investigators', investigators);
+
+  //   fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
+  //   .then(res => res.json())
+  //   .then(data => {
+  //     console.log('investigators: ', data)
+  //     setProjectData(data)
+  //   })
 
   }, [])
 
@@ -86,11 +96,11 @@ export default function ProjectData() {
         <Grid item xs={12}>
           <TextField
             required
-            id="project"
-            name="project"
-            label="Nome do Projecto"
+            id="name"
+            name="name"
+            label="Nome"
             fullWidth
-            autoComplete="shipping project"
+            autoComplete="Digite o Nome"
             variant="standard"
           />
         </Grid>
@@ -107,96 +117,39 @@ export default function ProjectData() {
         <Grid item xs={12}>
           <TextField
             required
-            id="type"
-            name="type"
-            label="Tipo de Projecto"
+            id="description"
+            name="description"
+            label="Descrição"
             fullWidth
-            autoComplete="shipping type"
-            variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          {/* <TextField
-            required
-            id="zip"
-            name="zip"
-            label="Zip / Postal code"
-            fullWidth
-            autoComplete="shipping postal-code"
-            variant="standard"
-          /> */}
-
-          {/* <Button
-  variant="contained"
-  component="label"
->
-  Upload File
-  <input
-    type="file"
-    hidden
-  />
-</Button> */}
-
-          <input
-            accept="image/*"
-            // className={classes.input}
-            style={{ display: 'none' }}
-            id="raised-button-file"
-            multiple
-            type="file"
-          />
-          <label htmlFor="raised-button-file">
-            <Button
-              fullWidth
-              // variant="contained"
-              variant="raised"
-              component="span"
-            >
-              <AttachmentIcon />
-              Anexo
-            </Button>
-          </label>
-
-          {/* <FileInput label="Anexo" error={{ message: "Error" }} /> */}
-
-        </Grid>
-        {/* <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="type"
-            name="type"
-            label="Tipo de Projecto"
-            fullWidth
-            autoComplete="shipping type"
-            variant="standard"
-          />
-        </Grid> */}
-        {/* <Grid item xs={12} sm={6}>
-          <TextField
-            id="state"
-            name="state"
-            label="State/Province/Region"
-            fullWidth
-            variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="country"
-            name="country"
-            label="Country"
-            fullWidth
-            autoComplete="shipping country"
+            autoComplete="Digite a Descrição"
             variant="standard"
           />
         </Grid>
         <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-            label="Use this address for payment details"
-          />
-        </Grid> */}
+          <FormControl sx={{ width: 505 }}>
+            <InputLabel id="teamLeader">Lider do Projecto</InputLabel>
+            <Select
+              labelId="Lider do Projecto"
+              id="teamLeader"
+              name="teamLeader"
+              value={teamLeaderSelected}
+              onChange={e => setTeamLeaderSelected(e.target.value)}
+              input={<OutlinedInput label="Lider do Projecto" />}
+              // multiple
+              // MenuProps={MenuProps}
+            >
+              {investigators.map(item => (
+                <MenuItem
+                  key={item.pkInvestigator}
+                  value={item.pkInvestigator}
+                  style={getStyles(item, investigators, theme)}
+                >
+                  {item.person.firstname} {item.person.lastname}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
       </Grid>
     </React.Fragment>
   );
