@@ -9,12 +9,13 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ProjectData from './_project-data';
-import AddInvestigadors from './_add-investigators';
 import AddCenters from './_add-centers';
 import Review from './_review';
-import MyAppBar from '../components/MyAppBar';
-import Copyright from '../components/Copyright';
+import MyAppBar from '/components/_my-app-bar';
+import Copyright from '/components/_copyright';
 import { useState, useEffect } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 // function Copyright() {
 //   return (
@@ -29,22 +30,37 @@ import { useState, useEffect } from 'react';
 //   );
 // }
 
-const steps = ['Dados do Projecto', 'Investigadores', 'Centros', 'Rever os Dados'];
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+const steps = ['Dados do Projecto', 'Centros e Colaboradores', 'Rever os Dados'];
 
 const theme = createTheme();
 
 export default function NewProject() {
 
-  // const [teamLeaderSelected, setTeamLeaderSelected] = useState(1)
+  const [errorStatus, setErrorStatus] = useState({
+    message: ['Salvo com sucesso!', 'Erro ao salvar!'],
+    severity: ['success', 'error']
+  })
 
-  // const [title, setTitle] = useState('')
-  // const [subtitle, setSubtitle] = useState('')
-  // const [pdfFile, setPdfFile] = useState('')
+  const [openNotification, setOpenNotification] = useState({
+    open: false,
+    vertical: 'bottom',
+    horizontal: 'center'
+  })
 
+  const { vertical, horizontal, open} = openNotification
+
+  const [statusNumber, setStatusNumber] = useState(-1)
+
+  const [investigators, setInvestigators] = useState([])
+  const [activeStep, setActiveStep] = useState(0);
   const [projectData, setProjectData] = useState({
-    title: "",
-    subtitle: "",
-    pdfFile: "",
+    title: '',
+    subtitle: '',
+    pdfFile: '',
     teamLeader: {
       pkInvestigator: 0,
     },
@@ -52,29 +68,81 @@ export default function NewProject() {
     guestsInvestigators: []
   })
 
-  const [investigators, setInvestigators] = useState([])
-  const [activeStep, setActiveStep] = React.useState(0);
-  
+  const changeProjectData = (event) => {
+    // console.log('Novo projectData', data, event.target.value);
+
+    setProjectData({
+      ...projectData,
+      [event.target.name]: event.target.value
+    })
+  }
+
+  const changeTeamLeader = (event) => {
+    console.log('teamLeader', event.target.value);
+
+    setProjectData({
+      ...projectData,
+      teamLeader: {
+        pkInvestigator: event.target.value
+      }
+    })
+
+    // saveProject()
+  }
+
+  const saveProject = () => {
+
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(projectData)
+    }).then(res => res.json())
+      .then(data => {
+        console.log('10:data.status: ', data.status)
+        if (data.status) {
+          console.log('10:data error: ', data)
+          setStatusNumber(1)
+        } else {
+          console.log('10:data: ', data)
+          setStatusNumber(0)
+        }
+        setOpenNotification({...openNotification, open: true })
+      }).catch(error => {
+        console.log('10:error ', error)
+        alert('Ocorreu um erro no servidor!')
+        throw (error)
+      })
+
+  }
+
+  const handleClose = () => setOpenNotification({ ...openNotification, open: false })
+
   useEffect(() => {
 
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
-    .then(res => res.json())
-    .then(data => {
-      console.log('1:investigators: ', data)
-      setInvestigators(data)
-    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('1:investigators: ', data)
+        setInvestigators(data)
+      })
+      .catch(err => console.error('err', err))
 
   }, [])
 
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <ProjectData investigators={investigators} />;
+        return <ProjectData
+                investigators={investigators}
+                projectData={projectData}
+                changeProjectData={changeProjectData}
+                changeTeamLeader={changeTeamLeader}
+              />;
       case 1:
-        return <AddInvestigadors investigators={investigators} />;
+        return <AddCenters investigators={investigators} />;
       case 2:
-        return <AddCenters />;
-      case 3:
         return <Review />;
       default:
         throw new Error('Passo desconhecido');
@@ -83,10 +151,7 @@ export default function NewProject() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-
     // projectData.teamLeader.pkInvestigator = teamLeaderSelected
-
-
   }
 
   const handleNext = () => {
@@ -148,7 +213,7 @@ export default function NewProject() {
         {/* <Copyright /> */}
         {/* <Copyright sx={{ mt: 22, mb: 4 }} /> */}
       </Container>
-      
+
       {/* Footer */}
       <Box
         style={{ marginTop: '14vh' }}
@@ -169,6 +234,22 @@ export default function NewProject() {
         </Container>
       </Box>
       {/* End footer */}
+
+      <Snackbar 
+        open={open} 
+        autoHideDuration={6000} 
+        onClose={handleClose}
+        anchorOrigin={{vertical, horizontal}}
+        key={vertical + horizontal}
+      >
+        <Alert 
+          onClose={handleClose} 
+          severity={errorStatus.severity[statusNumber]} 
+          sx={{ width: '100%' }}
+        >
+          {errorStatus.message[statusNumber]}
+        </Alert>
+      </Snackbar>
 
     </ThemeProvider>
   );

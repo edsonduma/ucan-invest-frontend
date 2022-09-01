@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Copyright from './ui/components/Copyright';
+import Copyright from '/components/_copyright';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { borderRadius } from '@mui/system';
@@ -147,7 +147,7 @@ export default function Home() {
           <Container sx={{ py: 8 }} maxWidth="md">
             {/* End hero unit */}
             <Grid container spacing={4}>
-              {projects.map((item) => (
+              {projects.map(item => (
                 <Grid item key={item} xs={12} sm={6} md={4}>
                   <Card
                     sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}

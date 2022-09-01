@@ -47,6 +47,16 @@ export default function MyAppBar() {
                         </Link>
                         <Link
                             variant="button"
+                            // color="text.secondary"
+                            color="inherit"
+                            href="/ui/new-investigation-center"
+                            sx={{ my: 1, mx: 1.5 }}
+                            // sx={{ bgcolor: 'primary.main' }}
+                        >
+                            Novo Centro
+                        </Link>
+                        <Link
+                            variant="button"
                             color="inherit"
                             // color="text.primary"
                             href="/ui/new-researcher"

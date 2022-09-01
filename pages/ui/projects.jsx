@@ -16,8 +16,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import MyAppBar from './components/MyAppBar';
-import Copyright from './components/Copyright';
+import MyAppBar from '/components/_my-app-bar';
+import Copyright from '/components/_copyright';
 
 // function Copyright() {
 //   return (
@@ -110,7 +110,7 @@ export default function Album() {
                       Projecto {card}
                     </Typography>
                     <Typography>
-                      Este é um cartão de mídia. Você pode usar esta seção para descrever o conteúdo.
+                      Este é um cartão de mídia. Você pode usar esta secção para descrever o conteúdo.
                     </Typography>
                   </CardContent>
                   <CardActions>

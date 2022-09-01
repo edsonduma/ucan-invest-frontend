@@ -16,7 +16,7 @@ function getStyles(item, typeOfAccount, theme) {
   };
 }
 
-export default function ProjectData({ investigators }) {
+export default function ProjectData({ investigators, projectData, changeProjectData, changeTeamLeader }) {
 
   // const [investigators, setInvestigators] = useState([])
 
@@ -26,14 +26,14 @@ export default function ProjectData({ investigators }) {
   // const [subtitle, setSubtitle] = useState('')
   // const [pdfFile, setPdfFile] = useState('')
 
-  const [projectData, setProjectData] = useState({
-    title: "",
-    subtitle: "",
-    pdfFile: "",
-    teamLeader: {
-      pkInvestigator: 0,
-    }
-  })
+  // const [projectData, setProjectData] = useState({
+  //   title: "",
+  //   subtitle: "",
+  //   pdfFile: "",
+  //   teamLeader: {
+  //     pkInvestigator: 0,
+  //   }
+  // })
 
   useEffect(() => {
 
@@ -96,12 +96,14 @@ export default function ProjectData({ investigators }) {
         <Grid item xs={12}>
           <TextField
             required
-            id="name"
-            name="name"
+            id="title"
+            name="title"
             label="Nome"
             fullWidth
             autoComplete="Digite o Nome"
             variant="standard"
+            value={projectData.title}
+            onChange={e => changeProjectData(e, projectData)}
           />
         </Grid>
         {/* <Grid item xs={12}>
@@ -117,12 +119,14 @@ export default function ProjectData({ investigators }) {
         <Grid item xs={12}>
           <TextField
             required
-            id="description"
-            name="description"
+            id="subtitle"
+            name="subtitle"
             label="Descrição"
             fullWidth
             autoComplete="Digite a Descrição"
             variant="standard"
+            value={projectData.subtitle}
+            onChange={e => changeProjectData(e, projectData)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -133,7 +137,10 @@ export default function ProjectData({ investigators }) {
               id="teamLeader"
               name="teamLeader"
               value={teamLeaderSelected}
-              onChange={e => setTeamLeaderSelected(e.target.value)}
+              onChange={e => {
+                setTeamLeaderSelected(e.target.value)
+                changeTeamLeader(e)
+              }}
               input={<OutlinedInput label="Lider do Projecto" />}
               // multiple
               // MenuProps={MenuProps}

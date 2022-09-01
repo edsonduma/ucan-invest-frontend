@@ -17,18 +17,21 @@ const MenuProps = {
   },
 };
 
-function getStyles(name, centers, theme) {
+function getStyles(name, list, theme) {
   return {
     fontWeight:
-      centers.indexOf(name) === -1
+      list.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
 }
 
-export default function AddCenters() {
+export default function AddCenters({ investigators }) {
 
   const [centers, setCenters] = useState([])
+
+  const [centersSelected, setCentersSelected] = useState([])
+  const [colaboratorsSelected, setColaboratorsSelected] = useState([])
   
   useEffect(() => {
 
@@ -41,15 +44,7 @@ export default function AddCenters() {
 
   }, [])
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setCenters(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
+  // const handleChange = ;
 
   return (
     <React.Fragment>
@@ -58,7 +53,6 @@ export default function AddCenters() {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-
           <FormControl sx={{ width: 505 }}>
             <InputLabel id="demo-multiple-chip-label">Centros</InputLabel>
             <Select
@@ -66,7 +60,15 @@ export default function AddCenters() {
               id="demo-multiple-chip"
               multiple
               value={centers}
-              onChange={handleChange}
+              onChange={e => {
+                const {
+                  target: { value },
+                } = e;
+                setCenters(
+                  // On autofill we get a stringified value.
+                  typeof value === 'string' ? value.split(',') : value,
+                );
+              }}
               input={<OutlinedInput id="select-multiple-centers" label="Selecione os Centros" />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -85,6 +87,46 @@ export default function AddCenters() {
                   style={getStyles(item.designation, centers, theme)}
                 >
                 {item.designation}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        
+        <Grid item xs={12}>
+
+          <FormControl sx={{ width: 505 }}>
+            <InputLabel id="demo-multiple-chip-label">Colaboradores</InputLabel>
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple
+              value={colaboratorsSelected}
+              onChange={e => {
+                // colaboratorsSelected.push(e.target.value)
+                // setColaboratorsSelected(e.target.value)
+                
+                setColaboratorsSelected(typeof e.target.value === 'string' ? e.target.value.split(',') : e.target.value)
+
+              }}
+              input={<OutlinedInput id="select-multiple-investigators" label="Selecione os Investigadores" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map(item => (
+                    // <Chip key={item.pkInvestigator} label={`${item.person.firstname} ${item.person.lastname}`} />
+                    <Chip key={item.pkInvestigator} label={`${item.person.firstname} ${item.person.lastname}`} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {investigators.map(item => (
+                <MenuItem
+                  key={item.pkInvestigator}
+                  value={item}
+                  style={getStyles(`${item.person.firstname} ${item.person.lastname}`, investigators, theme)}
+                >
+                {item.person.firstname} {item.person.lastname}
                 </MenuItem>
               ))}
             </Select>
