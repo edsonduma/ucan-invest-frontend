@@ -26,9 +26,9 @@ function getStyles(name, list, theme) {
   };
 }
 
-export default function AddCenters({ investigators }) {
+export default function AddCenters({ investigators, changeCentersSelected, changeColaboratorsSelected }) {
 
-  const [centers, setCenters] = useState([])
+  const [myCenters, setMyCenters] = useState([])
 
   const [centersSelected, setCentersSelected] = useState([])
   const [colaboratorsSelected, setColaboratorsSelected] = useState([])
@@ -38,13 +38,16 @@ export default function AddCenters({ investigators }) {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters`)
     .then(res => res.json())
     .then(data => {
-      console.log('1:centers: ', data)
-      setCenters(data)
+      console.log('1:myCenters: ', data)
+      setMyCenters(data)
     })
 
   }, [])
 
-  // const handleChange = ;
+  useEffect(() => {
+    console.log('centersSelected', centersSelected)
+    console.log('colaboratorsSelected', colaboratorsSelected)
+  }, [centersSelected, colaboratorsSelected])
 
   return (
     <React.Fragment>
@@ -59,15 +62,17 @@ export default function AddCenters({ investigators }) {
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={centers}
+              value={centersSelected}
               onChange={e => {
                 const {
                   target: { value },
                 } = e;
-                setCenters(
+                setCentersSelected(
                   // On autofill we get a stringified value.
                   typeof value === 'string' ? value.split(',') : value,
                 );
+
+                changeCentersSelected(centersSelected)
               }}
               input={<OutlinedInput id="select-multiple-centers" label="Selecione os Centros" />}
               renderValue={(selected) => (
@@ -80,11 +85,11 @@ export default function AddCenters({ investigators }) {
               )}
               MenuProps={MenuProps}
             >
-              {centers.map(item => (
+              {myCenters.map(item => (
                 <MenuItem
                   key={item.pkInvestigationCenter}
                   value={item}
-                  style={getStyles(item.designation, centers, theme)}
+                  style={getStyles(item.designation, myCenters, theme)}
                 >
                 {item.designation}
                 </MenuItem>
@@ -108,6 +113,7 @@ export default function AddCenters({ investigators }) {
                 
                 setColaboratorsSelected(typeof e.target.value === 'string' ? e.target.value.split(',') : e.target.value)
 
+                changeColaboratorsSelected(colaboratorsSelected)
               }}
               input={<OutlinedInput id="select-multiple-investigators" label="Selecione os Investigadores" />}
               renderValue={(selected) => (

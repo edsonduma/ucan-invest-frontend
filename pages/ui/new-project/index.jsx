@@ -68,6 +68,9 @@ export default function NewProject() {
     guestsInvestigators: []
   })
 
+  const [centersSelected, setCentersSelected] = useState([])
+  const [colaboratorsSelected, setColaboratorsSelected] = useState([])
+
   const changeProjectData = (event) => {
     // console.log('Novo projectData', data, event.target.value);
 
@@ -88,6 +91,16 @@ export default function NewProject() {
     })
 
     // saveProject()
+  }
+
+  const changeCentersSelected = (event) => {
+    console.log('CentersSelected', event.target.value);
+    setCentersSelected(event.target.value)
+  }
+
+  const changeColaboratorsSelected = (event) => {
+    console.log('ColaboratorsSelected', event.target.value);
+    setColaboratorsSelected(event.target.value)
   }
 
   const saveProject = () => {
@@ -141,7 +154,11 @@ export default function NewProject() {
                 changeTeamLeader={changeTeamLeader}
               />;
       case 1:
-        return <AddCenters investigators={investigators} />;
+        return <AddCenters 
+                investigators={investigators} 
+                // changeCentersSelected={changeCentersSelected}
+                // changeColaboratorsSelected={changeColaboratorsSelected}
+              />;
       case 2:
         return <Review />;
       default:
