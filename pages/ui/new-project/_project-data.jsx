@@ -102,7 +102,7 @@ export default function ProjectData({ investigators, projectData, setProjectData
             fullWidth
             autoComplete="Digite o Nome"
             variant="standard"
-            value={projectData.title}
+            value={projectData?.title}
             onChange={e => setProjectData({
               ...projectData,
               [e.target.name]: e.target.value
@@ -128,7 +128,7 @@ export default function ProjectData({ investigators, projectData, setProjectData
             fullWidth
             autoComplete="Digite a Descrição"
             variant="standard"
-            value={projectData.subtitle}
+            value={projectData?.subtitle}
             onChange={e => setProjectData({
               ...projectData,
               [e.target.name]: e.target.value
@@ -142,7 +142,7 @@ export default function ProjectData({ investigators, projectData, setProjectData
               labelId="Lider do Projecto"
               id="teamLeader"
               name="teamLeader"
-              value={projectData.teamLeader.pkInvestigator}
+              value={projectData?.teamLeader.pkInvestigator}
               onChange={e => {
                 // setTeamLeaderSelected(e.target.value)
                 // changeTeamLeader(e)

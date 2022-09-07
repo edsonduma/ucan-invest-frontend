@@ -92,7 +92,7 @@ export default function CenterData({ investigators }) {
               // multiple
               // MenuProps={MenuProps}
             >
-              {investigators.map(item => (
+              {investigators?.map(item => (
                 <MenuItem
                   key={item.pkInvestigator}
                   value={item.pkInvestigator}

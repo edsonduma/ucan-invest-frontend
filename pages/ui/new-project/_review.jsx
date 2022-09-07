@@ -45,7 +45,7 @@ export default function Review({ projectData, teamLeaderName }) {
       <List disablePadding>
 
         <ListItem sx={{ py: 1, px: 0 }}>
-          <ListItemText primary={projectData.title} secondary={projectData.subtitle} />
+          <ListItemText primary={projectData?.title} secondary={projectData?.subtitle} />
           <Typography variant="body2">{teamLeaderName}</Typography>
         </ListItem>
 

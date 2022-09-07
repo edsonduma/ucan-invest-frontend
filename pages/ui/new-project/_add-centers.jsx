@@ -68,7 +68,7 @@ export default function AddCenters({ investigators, projectData, setProjectData 
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={projectData.centers}
+              value={projectData?.centers}
               onChange={e => {
                 const {
                   target: { value },

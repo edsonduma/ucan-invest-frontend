@@ -80,7 +80,7 @@ export default function AddInvestigadors({ investigators }) {
               )}
               MenuProps={MenuProps}
             >
-              {investigators.map(item => (
+              {investigators?.map(item => (
                 <MenuItem
                   key={item.pkInvestigator}
                   value={item}
