@@ -11,9 +11,15 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from '/components/_copyright';
 import MyAppBar from '/components/_my-app-bar';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { useState, useEffect } from 'react';
+// import { FormControl, InputLabel, MenuItem, OutlinedInput, Select, Snackbar } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Select from '@mui/material/Select';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 // function Copyright(props) {
 //   return (
@@ -28,6 +34,10 @@ import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/m
 //   );
 // }
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const theme = createTheme();
 
 function getStyles(item, typeOfAccount, theme) {
@@ -41,11 +51,24 @@ function getStyles(item, typeOfAccount, theme) {
 
 export default function NewResearcher() {
 
+  const errorStatus = {
+    message: ['Salvo com sucesso!', 'Erro ao salvar!'],
+    severity: ['success', 'error']
+  }
+
+  const [openNotification, setOpenNotification] = useState({
+    open: false,
+    vertical: 'bottom',
+    horizontal: 'right'
+  })
+  const { vertical, horizontal, open} = openNotification
+  const [statusNumber, setStatusNumber] = useState(-1)
+
   const [typeOfAccounts, setTypeOfAccounts] = useState([])
   const [localities, setLocalities] = useState([])
 
   // data of account
-  const [typeOfAccountSelected, setTypeOfAccountSelected] = useState(2)
+  const [typeOfAccountSelected, setTypeOfAccountSelected] = useState(1)
   const [myLocality, setMyLocality] = useState(1)
   const [district, setDistrict] = useState(1)
 
@@ -72,6 +95,8 @@ export default function NewResearcher() {
       pkLocality: 1
     }
   })
+
+  const handleClose = () => setOpenNotification({ ...openNotification, open: false })
 
   // data of person
   // const [firstname, setFirstname] = useState('')
@@ -171,7 +196,7 @@ export default function NewResearcher() {
     .then(data => {
       console.log('4:data: ', data, data.status)
 
-      if (data.status < 300 || !data.status) {
+      if (!data.status) {
         // setFirstname('')
         // setLastname('')
         // setNif('')
@@ -179,10 +204,32 @@ export default function NewResearcher() {
         // setStreet('')
         // setHouseNumber('')
 
-        setAccount({})
-        setPerson({})
+        setAccount({
+          username: '',
+          password: '',
+          typeOfAccount: {
+            pkTypeOfAccount: 1
+          }
+        })
+        setPerson({
+          firstname: '',
+          lastname: '',
+          nif: '',
+          birthday_date: '',
+          street: '',
+          houseNumber: 0,
+          locality: {
+            pkLocality: 1
+          },
+          district: {
+            pkLocality: 1
+          }
+        })
 
-        alert('cadastrado com sucesso!')
+        // alert('cadastrado com sucesso!')
+        setStatusNumber(0)
+        setOpenNotification({...openNotification, open: true })
+
       }
     })
   }
@@ -435,6 +482,22 @@ export default function NewResearcher() {
         </Container>
       </Box>
       {/* End footer */}
+
+      <Snackbar
+        open={open} 
+        autoHideDuration={6000} 
+        onClose={handleClose}
+        anchorOrigin={{vertical, horizontal}}
+        key={vertical + horizontal}
+      >
+        <Alert 
+          onClose={handleClose} 
+          severity={errorStatus.severity[statusNumber]} 
+          sx={{ width: '100%' }}
+        >
+          {errorStatus.message[statusNumber]}
+        </Alert>
+      </Snackbar>
 
     </ThemeProvider>
   );

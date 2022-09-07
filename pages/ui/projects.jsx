@@ -18,6 +18,8 @@ import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MyAppBar from '/components/_my-app-bar';
 import Copyright from '/components/_copyright';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 // function Copyright() {
 //   return (
@@ -32,11 +34,25 @@ import Copyright from '/components/_copyright';
 //   );
 // }
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const theme = createTheme();
 
 export default function Album() {
+
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
+    .then(res => res.json())
+    .then(data => {
+      console.log('data: ', data)
+      setProjects(data)
+    })
+
+  }, [])
+  
   return (
     <ThemeProvider theme={theme}>
       <MyAppBar />
@@ -44,7 +60,7 @@ export default function Album() {
       <main style={{ backgroundColor: 'white' }}>
         {/* <main> */}
         {/* Hero unit */}
-        <Box
+        {/* <Box
           sx={{
             bgcolor: 'background.paper',
             pt: 8,
@@ -63,7 +79,7 @@ export default function Album() {
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
               Esta é uma pequena apresentação dos vários projectos que a ucan produz no seu dia a dia.
-            </Typography>
+            </Typography> */}
             {/* <Stack
               sx={{ pt: 4 }}
               direction="row"
@@ -73,53 +89,46 @@ export default function Album() {
               <Button variant="contained">Main call to action</Button>
               <Button variant="outlined">Secondary action</Button>
             </Stack> */}
-          </Container>
-        </Box>
+          {/* </Container>
+        </Box> */}
 
         {/* <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="mycontent"> */}
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card
-                  sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                >
-                  {/* <CardMedia
-                    component="img"
-                    sx={{
-                      // 16:9
-                      pt: '56.25%',
-                    }}
-                    image="https://source.unsplash.com/random"
-                    alt="random"
-                  /> */}
-                  <CardMedia
-                    component="img"
-                    sx={{
-                      // 16:9
-                      pt: '56.25%',
-                    }}
-                    // image="https://source.unsplash.com/random"
-                    // image="logoCEIC.jpg"
-                    image="/img/logoCEIC.jpg"
-                    alt="random"
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Projecto {card}
-                    </Typography>
-                    <Typography>
-                      Este é um cartão de mídia. Você pode usar esta secção para descrever o conteúdo.
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">Abrir</Button>
-                    {/* <Button size="small">Edit</Button> */}
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
+              {projects.map(item => (
+                <Grid item key={item.pkProject} xs={12} sm={6} md={4}>
+                  <Card
+                    sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                  >
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        // 16:9
+                        pt: '56.25%',
+                      }}
+                      // image="https://source.unsplash.com/random"
+                      // image="logoCEIC.jpg"
+                      image="/img/logoCEIC.jpg"
+                      alt="random"
+                    />
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {/* Projecto { item } */}
+                        Projecto { item.title }
+                      </Typography>
+                      <Typography>
+                        {/* Este é um cartão de mídia. Você pode usar esta seção para descrever o conteúdo. */}
+                        { item.subtitle }
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button size="small">Abrir</Button>
+                      {/* <Button size="small">Edit</Button> */}
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
           </Grid>
         </Container>
         {/* </Box> */}

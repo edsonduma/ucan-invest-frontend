@@ -16,11 +16,11 @@ function getStyles(item, typeOfAccount, theme) {
   };
 }
 
-export default function ProjectData({ investigators, projectData, changeProjectData, changeTeamLeader }) {
+export default function ProjectData({ investigators, projectData, setProjectData }) {
 
   // const [investigators, setInvestigators] = useState([])
 
-  const [teamLeaderSelected, setTeamLeaderSelected] = useState('')
+  // const [teamLeaderSelected, setTeamLeaderSelected] = useState('')
 
   // const [title, setTitle] = useState('')
   // const [subtitle, setSubtitle] = useState('')
@@ -103,7 +103,10 @@ export default function ProjectData({ investigators, projectData, changeProjectD
             autoComplete="Digite o Nome"
             variant="standard"
             value={projectData.title}
-            onChange={e => changeProjectData(e, projectData)}
+            onChange={e => setProjectData({
+              ...projectData,
+              [e.target.name]: e.target.value
+            })}
           />
         </Grid>
         {/* <Grid item xs={12}>
@@ -126,7 +129,10 @@ export default function ProjectData({ investigators, projectData, changeProjectD
             autoComplete="Digite a Descrição"
             variant="standard"
             value={projectData.subtitle}
-            onChange={e => changeProjectData(e, projectData)}
+            onChange={e => setProjectData({
+              ...projectData,
+              [e.target.name]: e.target.value
+            })}
           />
         </Grid>
         <Grid item xs={12}>
@@ -136,10 +142,16 @@ export default function ProjectData({ investigators, projectData, changeProjectD
               labelId="Lider do Projecto"
               id="teamLeader"
               name="teamLeader"
-              value={teamLeaderSelected}
+              value={projectData.teamLeader.pkInvestigator}
               onChange={e => {
-                setTeamLeaderSelected(e.target.value)
-                changeTeamLeader(e)
+                // setTeamLeaderSelected(e.target.value)
+                // changeTeamLeader(e)
+                setProjectData({
+                    ...projectData,
+                    teamLeader: {
+                      pkInvestigator: e.target.value
+                    }
+                })
               }}
               input={<OutlinedInput label="Lider do Projecto" />}
               // multiple

@@ -40,20 +40,21 @@ const theme = createTheme();
 
 export default function NewProject() {
 
-  const [errorStatus, setErrorStatus] = useState({
+  const errorStatus = {
     message: ['Salvo com sucesso!', 'Erro ao salvar!'],
     severity: ['success', 'error']
-  })
+  }
 
   const [openNotification, setOpenNotification] = useState({
     open: false,
     vertical: 'bottom',
-    horizontal: 'center'
+    horizontal: 'right'
   })
-
   const { vertical, horizontal, open} = openNotification
-
   const [statusNumber, setStatusNumber] = useState(-1)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [teamLeaderName, setTeamLeaderName] = useState('')
+  const [projectNumber, setProjectNumber] = useState('')
 
   const [investigators, setInvestigators] = useState([])
   const [activeStep, setActiveStep] = useState(0);
@@ -62,73 +63,11 @@ export default function NewProject() {
     subtitle: '',
     pdfFile: '',
     teamLeader: {
-      pkInvestigator: 0,
+      pkInvestigator: '',
     },
     centers: [],
     guestsInvestigators: []
   })
-
-  const [centersSelected, setCentersSelected] = useState([])
-  const [colaboratorsSelected, setColaboratorsSelected] = useState([])
-
-  const changeProjectData = (event) => {
-    // console.log('Novo projectData', data, event.target.value);
-
-    setProjectData({
-      ...projectData,
-      [event.target.name]: event.target.value
-    })
-  }
-
-  const changeTeamLeader = (event) => {
-    console.log('teamLeader', event.target.value);
-
-    setProjectData({
-      ...projectData,
-      teamLeader: {
-        pkInvestigator: event.target.value
-      }
-    })
-
-    // saveProject()
-  }
-
-  const changeCentersSelected = (event) => {
-    console.log('CentersSelected', event.target.value);
-    setCentersSelected(event.target.value)
-  }
-
-  const changeColaboratorsSelected = (event) => {
-    console.log('ColaboratorsSelected', event.target.value);
-    setColaboratorsSelected(event.target.value)
-  }
-
-  const saveProject = () => {
-
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(projectData)
-    }).then(res => res.json())
-      .then(data => {
-        console.log('10:data.status: ', data.status)
-        if (data.status) {
-          console.log('10:data error: ', data)
-          setStatusNumber(1)
-        } else {
-          console.log('10:data: ', data)
-          setStatusNumber(0)
-        }
-        setOpenNotification({...openNotification, open: true })
-      }).catch(error => {
-        console.log('10:error ', error)
-        alert('Ocorreu um erro no servidor!')
-        throw (error)
-      })
-
-  }
 
   const handleClose = () => setOpenNotification({ ...openNotification, open: false })
 
@@ -137,12 +76,28 @@ export default function NewProject() {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
       .then(res => res.json())
       .then(data => {
-        console.log('1:investigators: ', data)
+        // console.log('1:investigators: ', data)
         setInvestigators(data)
       })
       .catch(err => console.error('err', err))
 
   }, [])
+
+  useEffect(() => {
+    investigators.find(e => {
+      // e.pkInvestigator === projectData.teamLeader.pkInvestigator ? e.person.firstname + ' ' + e.person.lastname : ''
+
+      if (e.pkInvestigator === projectData.teamLeader.pkInvestigator)
+        setTeamLeaderName(e.person.firstname + ' ' + e.person.lastname)
+    })
+
+    // console.log('teamLeaderName', teamLeaderName);
+  }, [projectData.teamLeader.pkInvestigator])
+  
+  useEffect(() => {
+    // console.log('testando...', activeStep, steps.length);
+    if (activeStep === steps.length) handleSubmit()
+  }, [activeStep])
 
   function getStepContent(step) {
     switch (step) {
@@ -150,25 +105,22 @@ export default function NewProject() {
         return <ProjectData
                 investigators={investigators}
                 projectData={projectData}
-                changeProjectData={changeProjectData}
-                changeTeamLeader={changeTeamLeader}
+                setProjectData={setProjectData}
               />;
       case 1:
         return <AddCenters 
                 investigators={investigators} 
-                // changeCentersSelected={changeCentersSelected}
-                // changeColaboratorsSelected={changeColaboratorsSelected}
+                projectData={projectData}
+                setProjectData={setProjectData}
               />;
       case 2:
-        return <Review />;
+        return <Review
+                  projectData={projectData}
+                  teamLeaderName={teamLeaderName}
+              />;
       default:
         throw new Error('Passo desconhecido');
     }
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    // projectData.teamLeader.pkInvestigator = teamLeaderSelected
   }
 
   const handleNext = () => {
@@ -178,6 +130,35 @@ export default function NewProject() {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+  const handleSubmit = () => {
+
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(projectData)
+    }).then(res => res.json())
+      .then(data => {
+        // console.log('10:data.status: ', data.status)
+        if (data.status) {
+          // console.log('10:data error: ', data)
+          setStatusNumber(1)
+        } else {
+          // console.log('10:data: ', data)
+          setProjectNumber(data.pkProject)
+          setStatusNumber(0)
+        }
+        setOpenNotification({...openNotification, open: true })
+        setSubmitSuccess(true)
+      }).catch(error => {
+        console.log('10:error ', error)
+        alert('Ocorreu um erro no servidor!')
+        throw (error)
+      })
+
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -198,12 +179,21 @@ export default function NewProject() {
           <React.Fragment>
             {activeStep === steps.length ? (
               <React.Fragment>
+                {submitSuccess ?
                 <Typography variant="h5" gutterBottom>
-                  Cadastro concluido.
+                  Cadastro concluido
                 </Typography>
+                :
+                <Typography variant="h5" gutterBottom>
+                  Em processamento...
+                </Typography>
+                }
+                {submitSuccess &&
                 <Typography variant="subtitle1">
-                  O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.
+                  {/* 'O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.' */}
+                  O projecto número #{projectNumber} foi criado com sucesso e será publicado após aprovação do conselho.
                 </Typography>
+                }
               </React.Fragment>
             ) : (
               <React.Fragment>

@@ -26,28 +26,34 @@ function getStyles(name, list, theme) {
   };
 }
 
-export default function AddCenters({ investigators, changeCentersSelected, changeColaboratorsSelected }) {
+export default function AddCenters({ investigators, projectData, setProjectData }) {
 
   const [myCenters, setMyCenters] = useState([])
 
-  const [centersSelected, setCentersSelected] = useState([])
-  const [colaboratorsSelected, setColaboratorsSelected] = useState([])
+  // const [centersSelected, setCentersSelected] = useState([])
+  // const [colaboratorsSelected, setColaboratorsSelected] = useState([])
   
   useEffect(() => {
 
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters`)
     .then(res => res.json())
     .then(data => {
-      console.log('1:myCenters: ', data)
+      // console.log('1:myCenters: ', data)
       setMyCenters(data)
     })
 
   }, [])
 
-  useEffect(() => {
-    console.log('centersSelected', centersSelected)
-    console.log('colaboratorsSelected', colaboratorsSelected)
-  }, [centersSelected, colaboratorsSelected])
+  // useEffect(() => {
+  //   console.log('centersSelected', centersSelected)
+  //   console.log('colaboratorsSelected', colaboratorsSelected)
+    
+  //   setProjectData({
+  //     ...projectData,
+  //     centers: centersSelected,
+  //     guestsInvestigators: colaboratorsSelected
+  //   })
+  // }, [centersSelected, colaboratorsSelected])
 
   return (
     <React.Fragment>
@@ -62,17 +68,22 @@ export default function AddCenters({ investigators, changeCentersSelected, chang
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={centersSelected}
+              value={projectData.centers}
               onChange={e => {
                 const {
                   target: { value },
                 } = e;
-                setCentersSelected(
-                  // On autofill we get a stringified value.
-                  typeof value === 'string' ? value.split(',') : value,
-                );
+                // setCentersSelected(
+                //   // On autofill we get a stringified value.
+                //   typeof value === 'string' ? value.split(',') : value,
+                // );
 
-                changeCentersSelected(centersSelected)
+                setProjectData({
+                  ...projectData,
+                  centers: typeof value === 'string' ? value.split(',') : value,
+                })
+
+                // changeCentersSelected(centersSelected)
               }}
               input={<OutlinedInput id="select-multiple-centers" label="Selecione os Centros" />}
               renderValue={(selected) => (
@@ -106,14 +117,22 @@ export default function AddCenters({ investigators, changeCentersSelected, chang
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={colaboratorsSelected}
+              value={projectData.guestsInvestigators}
               onChange={e => {
                 // colaboratorsSelected.push(e.target.value)
                 // setColaboratorsSelected(e.target.value)
                 
-                setColaboratorsSelected(typeof e.target.value === 'string' ? e.target.value.split(',') : e.target.value)
+                const {
+                  target: { value },
+                } = e;
 
-                changeColaboratorsSelected(colaboratorsSelected)
+                // setColaboratorsSelected(typeof value === 'string' ? value.split(',') : value)
+                // changeColaboratorsSelected(colaboratorsSelected)
+    
+                setProjectData({
+                  ...projectData,
+                  guestsInvestigators: typeof value === 'string' ? value.split(',') : value
+                })
               }}
               input={<OutlinedInput id="select-multiple-investigators" label="Selecione os Investigadores" />}
               renderValue={(selected) => (

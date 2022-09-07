@@ -36,19 +36,18 @@ const products = [
   },
 ];
 
-export default function Review() {
+export default function Review({ projectData, teamLeaderName }) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
         Resumo
       </Typography>
       <List disablePadding>
-        {products.map((product) => (
-          <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={product.name} secondary={product.type} />
-            <Typography variant="body2">{product.author}</Typography>
-          </ListItem>
-        ))}
+
+        <ListItem sx={{ py: 1, px: 0 }}>
+          <ListItemText primary={projectData.title} secondary={projectData.subtitle} />
+          <Typography variant="body2">{teamLeaderName}</Typography>
+        </ListItem>
 
         <ListItem sx={{ py: 1, px: 0 }}>
         </ListItem>
