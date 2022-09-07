@@ -1,21 +1,19 @@
 import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AddressForm from './_project-data';
+import CenterData from './_center-data';
+import AddInvestigadors from './_add-investigators';
 import Review from './_review';
-import MyAppBar from '../components/MyAppBar';
-import Copyright from '../components/Copyright';
+import MyAppBar from '/components/_my-app-bar';
+import Copyright from '/components/_copyright';
+import { useState, useEffect } from 'react';
 
 // function Copyright() {
 //   return (
@@ -30,23 +28,38 @@ import Copyright from '../components/Copyright';
 //   );
 // }
 
-const steps = ['Dados do Projecto', 'Rever os Dados'];
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <Review />;
-    default:
-      throw new Error('Passo desconhecido');
-  }
-}
+const steps = ['Dados do Centro', 'Investigadores e Areas de Actuação', 'Rever os Dados'];
 
 const theme = createTheme();
 
 export default function NewProject() {
   const [activeStep, setActiveStep] = React.useState(0);
+
+  const [investigators, setInvestigators] = useState([])
+
+  useEffect(() => {
+
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('1:investigators: ', data)
+        setInvestigators(data)
+      })
+
+  }, [])
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return <CenterData investigators={investigators} />;
+      case 1:
+        return <AddInvestigadors investigators={investigators} />;
+      case 2:
+        return <Review />;
+      default:
+        throw new Error('Passo desconhecido');
+    }
+  }
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -79,7 +92,7 @@ export default function NewProject() {
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <Typography component="h1" variant="h4" align="center">
-            Novo Projecto
+            Novo Centro de Investigação
           </Typography>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
             {steps.map((label) => (
@@ -95,7 +108,7 @@ export default function NewProject() {
                   Cadastro concluido.
                 </Typography>
                 <Typography variant="subtitle1">
-                  O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.
+                  O centro número #1234 foi criado com sucesso e será publicado após aprovação do conselho.
                 </Typography>
               </React.Fragment>
             ) : (
@@ -144,7 +157,7 @@ export default function NewProject() {
         </Container>
       </Box>
       {/* End footer */}
-
+      
     </ThemeProvider>
   );
 }

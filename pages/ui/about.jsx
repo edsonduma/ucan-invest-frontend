@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
-import MyAppBar from './components/MyAppBar';
-import Copyright from './components/Copyright';
+import MyAppBar from '/components/_my-app-bar';
+import Copyright from '/components/_copyright';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // function Copyright() {
@@ -41,7 +41,7 @@ export default function StickyFooter() {
                     </Typography>
                     <Typography variant="h5" component="h2" gutterBottom>
                         {'Projectos desenvolvidos pela UCAN. '}
-                        {'No ambito da investigacao e da pesquisa necessaria para o desenvolvimento.'}
+                        {'No ambito da investigação e da pesquisa necessaria para o desenvolvimento.'}
                     </Typography>
                     <Typography variant="body1">Esta é uma pequena apresentação dos varios projectos que a ucan produz no seu dia a dia..</Typography>
                 </Container>

@@ -1,27 +1,28 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Copyright from '../components/Copyright';
-import MyAppBar from '../components/MyAppBar';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextareaAutosize } from '@mui/material';
-import { interpolateAs } from 'next/dist/shared/lib/router/router';
+import ProjectData from './_project-data';
+import AddCenters from './_add-centers';
+import Review from './_review';
+import MyAppBar from '/components/_my-app-bar';
+import Copyright from '/components/_copyright';
+import { useState, useEffect } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-// function Copyright(props) {
+// function Copyright() {
 //   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
+//     <Typography variant="body2" color="text.secondary" align="center">
 //       {'Copyright © '}
 //       <Link color="inherit" href="https://mui.com/">
-//         Your Website
+//         UCAN
 //       </Link>{' '}
 //       {new Date().getFullYear()}
 //       {'.'}
@@ -29,373 +30,200 @@ import { interpolateAs } from 'next/dist/shared/lib/router/router';
 //   );
 // }
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+const steps = ['Dados do Projecto', 'Centros e Colaboradores', 'Rever os Dados'];
+
 const theme = createTheme();
 
-function getStyles(item, typeOfAccount, theme) {
-  return {
-    fontWeight:
-      typeOfAccount.indexOf(item) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
+export default function NewProject() {
 
-export default function NewResearcher() {
+  const errorStatus = {
+    message: ['Salvo com sucesso!', 'Erro ao salvar!'],
+    severity: ['success', 'error']
+  }
+
+  const [openNotification, setOpenNotification] = useState({
+    open: false,
+    vertical: 'bottom',
+    horizontal: 'right'
+  })
+  const { vertical, horizontal, open} = openNotification
+  const [statusNumber, setStatusNumber] = useState(-1)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [teamLeaderName, setTeamLeaderName] = useState('')
+  const [projectNumber, setProjectNumber] = useState('')
 
   const [investigators, setInvestigators] = useState([])
-
-  const [teamLeaderSelected, setTeamLeaderSelected] = useState(1)
-
-  // const [title, setTitle] = useState('')
-  // const [subtitle, setSubtitle] = useState('')
-  // const [pdfFile, setPdfFile] = useState('')
-
+  const [activeStep, setActiveStep] = useState(0);
   const [projectData, setProjectData] = useState({
-    title: "",
-    subtitle: "",
-    pdfFile: "",
+    title: '',
+    subtitle: '',
+    pdfFile: '',
     teamLeader: {
-      pkInvestigator: 0,
-    }
+      pkInvestigator: '',
+    },
+    centers: [],
+    guestsInvestigators: []
   })
+
+  const handleClose = () => setOpenNotification({ ...openNotification, open: false })
 
   useEffect(() => {
 
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
       .then(res => res.json())
       .then(data => {
-        console.log('7:data: ', data)
+        // console.log('1:investigators: ', data)
         setInvestigators(data)
       })
+      .catch(err => console.error('err', err))
 
   }, [])
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
+  useEffect(() => {
+    investigators.find(e => {
+      // e.pkInvestigator === projectData.teamLeader.pkInvestigator ? e.person.firstname + ' ' + e.person.lastname : ''
 
-    //     account.typeOfAccount.pkTypeOfAccount = typeOfAccountSelected
+      if (e.pkInvestigator === projectData.teamLeader.pkInvestigator)
+        setTeamLeaderName(e.person.firstname + ' ' + e.person.lastname)
+    })
 
-    //     projectData.locality.pkLocality = myLocality
-    //     projectData.district.pkLocality = district
+    // console.log('teamLeaderName', teamLeaderName);
+  }, [projectData.teamLeader.pkInvestigator])
+  
+  useEffect(() => {
+    // console.log('testando...', activeStep, steps.length);
+    if (activeStep === steps.length) handleSubmit()
+  }, [activeStep])
 
-    //     console.log('2:data: ',
-    //       account,
-    //       'username',
-    //       account.username,
-    //       'another data: ',
-    //       person
-    //     )
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return <ProjectData
+                investigators={investigators}
+                projectData={projectData}
+                setProjectData={setProjectData}
+              />;
+      case 1:
+        return <AddCenters 
+                investigators={investigators} 
+                projectData={projectData}
+                setProjectData={setProjectData}
+              />;
+      case 2:
+        return <Review
+                  projectData={projectData}
+                  teamLeaderName={teamLeaderName}
+              />;
+      default:
+        throw new Error('Passo desconhecido');
+    }
+  }
 
-    //     //   firstname,
-    //     //   lastname,
-    //     //   nif,
-    //     //   birthdayDate,
-    //     //   street,
-    //     //   houseNumber
-    //     // )
+  const handleNext = () => {
+    setActiveStep(activeStep + 1);
+  };
 
-    //     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/people`, {
-    //     //   method: 'POST',
-    //     //   headers: {
-    //     //     "Content-Type": "application/json"
-    //     //   },
-    //     //   body: JSON.stringify({
-    //     //     nif: nif,
-    //     //     firstname: firstname,
-    //     //     lastname: lastname,
-    //     //     birthday_date: birthdayDate,
-    //     //     street: street,
-    //     //     houseNumber: houseNumber,
-    //     //   })
-    //     // }).then(res=> res.json())
-    //     // .then(data => {
-    //     //   console.log('3:data: ', data)
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
 
-    //     //   if (data.status === 200) {
-    //     //     setFirstname('')
-    //     //     setLastname('')
-    //     //     setNif('')
-    //     //     setBirthdayDate('')
-    //     //     setStreet('')
-    //     //     setHouseNumber('')
-    //     //   }
-    //     // })
+  const handleSubmit = () => {
 
-    //     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`, {
-    //       method: 'POST',
-    //       headers: {
-    //         "Content-Type": "application/json"
-    //       },
-    //       body: JSON.stringify({
-    //         account: account,
-    //         person: person
-    //       })
-    //     }).then(res => res.json())
-    //     .then(data => {
-    //       console.log('4:data: ', data, data.status)
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(projectData)
+    }).then(res => res.json())
+      .then(data => {
+        // console.log('10:data.status: ', data.status)
+        if (data.status) {
+          // console.log('10:data error: ', data)
+          setStatusNumber(1)
+        } else {
+          // console.log('10:data: ', data)
+          setProjectNumber(data.pkProject)
+          setStatusNumber(0)
+        }
+        setOpenNotification({...openNotification, open: true })
+        setSubmitSuccess(true)
+      }).catch(error => {
+        console.log('10:error ', error)
+        alert('Ocorreu um erro no servidor!')
+        throw (error)
+      })
 
-    //       if (data.status < 300 || !data.status) {
-    //         // setFirstname('')
-    //         // setLastname('')
-    //         // setNif('')
-    //         // setBirthdayDate('')
-    //         // setStreet('')
-    //         // setHouseNumber('')
-
-    //         setAccount({})
-    //         setPerson({})
-
-    //         alert('cadastrado com sucesso!')
-    //       }
-    //     })
   }
 
   return (
     <ThemeProvider theme={theme}>
       <MyAppBar />
 
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            {/* Novo Projecto ### */}
+      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+        <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+          <Typography component="h1" variant="h4" align="center">
             Novo Projecto
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="Digite o Titulo"
-                  name="title"
-                  required
-                  fullWidth
-                  id="title"
-                  label="Titulo"
-                  autoFocus
-                  value={projectData.title}
-                  onChange={e => setProjectData({ ...projectData, [e.target.name]: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                {/* <TextField
-                  required
-                  fullWidth
-                  id="subtitle"
-                  label="Descrição"
-                  name="subtitle"
-                  autoComplete="Digite a Descrição do Projecto"
-                  /> */}
-                {/* <TextareaAutosize
-                  required
-                  fullWidth
-                  id="subtitle"
-                  label="Descrição"
-                  name="subtitle"
-                  autoComplete="Digite a Descrição do Projecto"
-                  aria-label="minimum height"
-                  minRows={3}
-                  placeholder="Minimum 3 rows"
-                  style={{ width: 200 }}
-                  value={projectData.subtitle}
-                  onChange={e => setProjectData({ ...projectData, [e.target.name]: e.target.value })}
-                /> */}
-                <TextField
-                  required
-                  fullWidth
-                  id="subtitle"
-                  label="Descrição"
-                  name="subtitle"
-                  autoComplete="Digite a Descrição do Projecto"
-                  placeholder="Digite a Descrição do Projecto"
-                  multiline
-                  rows={2}
-                  maxRows={4}
-                  value={projectData.subtitle}
-                  onChange={e => setProjectData({ ...projectData, [e.target.name]: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="pdfFile"
-                  label="Ficheiro PDF"
-                  name="pdfFile"
-                  autoComplete="Digite o nome do ficheiro PDF"
-                  value={projectData.pdfFile}
-                  onChange={e => setProjectData({ ...projectData, [e.target.name]: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl sx={{ width: 395 }}>
-                  <InputLabel id="district">Lider do Projecto</InputLabel>
-                  <Select
-                    labelId="teamLeader"
-                    id="teamLeader"
-                    name="teamLeader"
-                    value={teamLeaderSelected}
-                    onChange={e => setTeamLeaderSelected(e.target.value)}
-                    input={<OutlinedInput label="Lider do Projecto" />}
-                  // multiple
-                  // MenuProps={MenuProps}
-                  >
-                    {investigators.map(item => (
-                      <MenuItem
-                        key={item.pkInvestigator}
-                        value={item.pkInvestigator}
-                        style={getStyles(item, investigators, theme)}
-                      >
-                        {item.person.firstname} {item.person.lastname}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              {/* 
-              <Grid item xs={12}>
-                <FormControl sx={{ width: 395 }}>
-                  <InputLabel id="bairro">Bairro</InputLabel>
-                  <Select
-                    labelId="Bairro"
-                    id="bairro"
-                    name="bairro"
-                    value={myLocality}
-                    onChange={e => setMyLocality(e.target.value)}
-                    input={<OutlinedInput label="Bairro" />}
-                    // multiple
-                    // MenuProps={MenuProps}
-                  >
-                    {localities.map(item => (
-                      <MenuItem
-                        key={item.pkLocality}
-                        value={item.pkLocality}
-                        style={getStyles(item, localities, theme)}
-                      >
-                        {item.designation}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  name="street"
-                  label="Rua"
-                  id="street"
-                  autoComplete="street"
-                  value={projectData.street}
-                  onChange={e => setPerson({...person, [e.target.name]: e.target.value})}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  name="houseNumber"
-                  label="Numero da Casa"
-                  id="houseNumber"
-                  autoComplete="houseNumber"
-                  value={projectData.houseNumber}
-                  onChange={e => setPerson({...person, [e.target.name]: e.target.value})}
-                />
-              </Grid> */}
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
+          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <React.Fragment>
+            {activeStep === steps.length ? (
+              <React.Fragment>
+                {submitSuccess ?
+                <Typography variant="h5" gutterBottom>
+                  Cadastro concluido
+                </Typography>
+                :
+                <Typography variant="h5" gutterBottom>
+                  Em processamento...
+                </Typography>
+                }
+                {submitSuccess &&
+                <Typography variant="subtitle1">
+                  {/* 'O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.' */}
+                  O projecto número #{projectNumber} foi criado com sucesso e será publicado após aprovação do conselho.
+                </Typography>
+                }
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {getStepContent(activeStep)}
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  {activeStep !== 0 && (
+                    <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+                      Voltar
+                    </Button>
+                  )}
 
-              {/* <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="username"
-                  label="Nome de Utilizador"
-                  name="username"
-                  autoComplete="Digite o Nome de Utilizador"
-                  value={account.username}
-                  onChange={e => setAccount({...account, [e.target.name]: e.target.value})}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="password"
-                  label="Senha"
-                  name="password"
-                  type="password"
-                  autoComplete="Digite a Senha"
-                  value={account.password}
-                  onChange={e => setAccount({...account, [e.target.name]: e.target.value})}
-                />
-              </Grid>
-
-              {/* <FormControl sx={{ m: 1, width: 300 }}> */}
-              {/* <Grid item xs={12}>
-                <FormControl sx={{ width: 395 }}>
-                  <InputLabel id="type_of_account">Tipo de Conta</InputLabel>
-                  <Select
-                    labelId="Tipo de Conta"
-                    id="type_of_account"
-                    name="type_of_account"
-                    value={typeOfAccountSelected}
-                    onChange={e => setTypeOfAccountSelected(e.target.value)}
-                    input={<OutlinedInput label="Tipo de Conta" />}
-                    // multiple
-                    // MenuProps={MenuProps}
+                  <Button
+                    variant="contained"
+                    onClick={handleNext}
+                    sx={{ mt: 3, ml: 1 }}
                   >
-                    {typeOfAccounts.map(item => (
-                      <MenuItem
-                        key={item.pkTypeOfAccount}
-                        value={item.pkTypeOfAccount}
-                        style={getStyles(item, typeOfAccounts, theme)}
-                      >
-                        {item.designation}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid> */}
-
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Cadastrar
-            </Button>
-            {/* <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid> */}
-          </Box>
-        </Box>
-        {/* <Copyright sx={{ mt: 5 }} /> */}
+                    {activeStep === steps.length - 1 ? 'Confirmar' : 'Próximo'}
+                  </Button>
+                </Box>
+              </React.Fragment>
+            )}
+          </React.Fragment>
+        </Paper>
+        {/* <Copyright /> */}
         {/* <Copyright sx={{ mt: 22, mb: 4 }} /> */}
       </Container>
 
       {/* Footer */}
       <Box
-        style={{ marginTop: '21.5vh' }}
+        style={{ marginTop: '14vh' }}
         component="footer"
         sx={{
           py: 3,
@@ -413,6 +241,22 @@ export default function NewResearcher() {
         </Container>
       </Box>
       {/* End footer */}
+
+      <Snackbar 
+        open={open} 
+        autoHideDuration={6000} 
+        onClose={handleClose}
+        anchorOrigin={{vertical, horizontal}}
+        key={vertical + horizontal}
+      >
+        <Alert 
+          onClose={handleClose} 
+          severity={errorStatus.severity[statusNumber]} 
+          sx={{ width: '100%' }}
+        >
+          {errorStatus.message[statusNumber]}
+        </Alert>
+      </Snackbar>
 
     </ThemeProvider>
   );
