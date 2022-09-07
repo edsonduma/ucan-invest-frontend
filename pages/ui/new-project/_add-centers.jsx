@@ -117,7 +117,7 @@ export default function AddCenters({ investigators, projectData, setProjectData 
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={projectData.guestsInvestigators}
+              value={projectData?.guestsInvestigators}
               onChange={e => {
                 // colaboratorsSelected.push(e.target.value)
                 // setColaboratorsSelected(e.target.value)
@@ -145,7 +145,7 @@ export default function AddCenters({ investigators, projectData, setProjectData 
               )}
               MenuProps={MenuProps}
             >
-              {investigators.map(item => (
+              {investigators?.map(item => (
                 <MenuItem
                   key={item.pkInvestigator}
                   value={item}

@@ -157,7 +157,7 @@ export default function ProjectData({ investigators, projectData, setProjectData
               // multiple
               // MenuProps={MenuProps}
             >
-              {investigators.map(item => (
+              {investigators?.map(item => (
                 <MenuItem
                   key={item.pkInvestigator}
                   value={item.pkInvestigator}
