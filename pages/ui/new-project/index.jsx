@@ -73,10 +73,19 @@ export default function NewProject() {
 
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
-      .then(res => res.json())
+    console.log('host backend', process.env.NEXT_PUBLIC_BASE_URI);
+
+    fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URI}/investigators`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
+        },
+      }
+    ).then(res => res.json())
       .then(data => {
-        // console.log('1:investigators: ', data)
+        console.log('1:investigators: ', data)
         setInvestigators(data)
       })
       .catch(err => console.error('err', err))
@@ -133,10 +142,13 @@ export default function NewProject() {
 
   const handleSubmit = () => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
+    fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URI}/projects`, 
+      {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
       },
       body: JSON.stringify(projectData)
     }).then(res => res.json())
@@ -149,9 +161,9 @@ export default function NewProject() {
           // console.log('10:data: ', data)
           setProjectNumber(data.pkProject)
           setStatusNumber(0)
+          setSubmitSuccess(true)
         }
         setOpenNotification({...openNotification, open: true })
-        setSubmitSuccess(true)
       }).catch(error => {
         console.log('10:error ', error)
         alert('Ocorreu um erro no servidor!')

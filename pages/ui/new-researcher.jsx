@@ -93,7 +93,8 @@ export default function NewResearcher() {
     },
     district: {
       pkLocality: 1
-    }
+    },
+    account: {}
   })
 
   const handleClose = () => setOpenNotification({ ...openNotification, open: false })
@@ -119,16 +120,28 @@ export default function NewResearcher() {
 
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/type_of_account`)
-    .then(res => res.json())
-    .then(data => {
-      console.log('5:data: ', data)
-      setTypeOfAccounts(data)
-    })
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/type_of_account`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
+        },
+      }
+    ).then(res => res.json())
+      .then(data => {
+        console.log('5:data: ', data)
+        setTypeOfAccounts(data)
+      })
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/places`)
-    .then(res => res.json())
-    .then(data => setLocalities(data))
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/places`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
+        },
+      }
+    ).then(res => res.json())
+      .then(data => setLocalities(data))
     
   }, [])
   
@@ -182,14 +195,17 @@ export default function NewResearcher() {
     //     setHouseNumber('')
     //   }
     // })
+    person.account = account
+
+    console.log('person.account', person, person.account);
 
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`, {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
       },
       body: JSON.stringify({
-        account: account,
         person: person
       })
     }).then(res => res.json())
@@ -223,7 +239,8 @@ export default function NewResearcher() {
           },
           district: {
             pkLocality: 1
-          }
+          },
+          account: {}
         })
 
         // alert('cadastrado com sucesso!')
