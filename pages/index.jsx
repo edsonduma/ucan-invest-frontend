@@ -21,7 +21,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { borderRadius } from '@mui/system';
 import axios from 'axios';
-import { LOCAL_BASE_URL } from '../utils/constants';
+import { HEROKU_BASE_URL } from '../utils/constants';
 
 // function Copyright() {
 //   return (
@@ -46,7 +46,7 @@ export default function Home() {
 
   useEffect(() => {
 
-    axios.get(`${LOCAL_BASE_URL}/projects`)
+    axios.get(`${HEROKU_BASE_URL}/projects`)
     .then((response) => {
       setProjects(response.data)
     })

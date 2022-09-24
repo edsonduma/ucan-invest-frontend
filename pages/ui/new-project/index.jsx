@@ -17,7 +17,7 @@ import { useState, useEffect } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
-import {LOCAL_BASE_URL} from '../../../utils/constants'
+import { HEROKU_BASE_URL } from '../../../utils/constants';
 import { getCookieFromBrowser } from '../../../utils/cookie';
 
 // function Copyright() {
@@ -76,7 +76,7 @@ export default function NewProject() {
 
   useEffect(() => {
 
-    axios.get(`${LOCAL_BASE_URL}/investigators`,
+    axios.get(`${HEROKU_BASE_URL}/investigators`,
      { 
       headers:{
          "Authorization": getCookieFromBrowser('token') 

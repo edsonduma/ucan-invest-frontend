@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import Copyright from '/components/_copyright';
 import { authenticate } from '../../api/AuthenticateService';
-import { LOCAL_BASE_URL } from '../../utils/constants';
+import { HEROKU_BASE_URL} from '../../utils/constants';
 import axios from 'axios';
 import { setCookie } from '../../utils/cookie';
 import { createJWTToken } from '../../utils/functions';
@@ -30,7 +30,7 @@ export default function SignIn() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    axios.post(`${LOCAL_BASE_URL}/authenticate`, {
+    axios.post(`${HEROKU_BASE_URL}/authenticate`, {
       username: data.get('email'),
       password: data.get('password')
     })
