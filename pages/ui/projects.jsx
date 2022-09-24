@@ -20,6 +20,8 @@ import MyAppBar from '/components/_my-app-bar';
 import Copyright from '/components/_copyright';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import axios from 'axios';
+import { LOCAL_BASE_URL } from '../../utils/constants';
 
 // function Copyright() {
 //   return (
@@ -44,12 +46,17 @@ export default function Album() {
 
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
-    .then(res => res.json())
-    .then(data => {
-      console.log('data: ', data)
-      setProjects(data)
+    axios.get(`${LOCAL_BASE_URL}/projects`)
+    .then((response) => {
+      setProjects(response.data)
     })
+
+    // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
+    // .then(res => res.json())
+    // .then(data => {
+    //   console.log('data: ', data)
+    //   setProjects(data)
+    // })
 
   }, [])
   

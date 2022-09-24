@@ -16,6 +16,9 @@ import Copyright from '/components/_copyright';
 import { useState, useEffect } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import axios from 'axios';
+import {LOCAL_BASE_URL} from '../../../utils/constants'
+import { getCookieFromBrowser } from '../../../utils/cookie';
 
 // function Copyright() {
 //   return (
@@ -73,13 +76,23 @@ export default function NewProject() {
 
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
-      .then(res => res.json())
-      .then(data => {
-        // console.log('1:investigators: ', data)
-        setInvestigators(data)
-      })
-      .catch(err => console.error('err', err))
+    axios.get(`${LOCAL_BASE_URL}/investigators`,
+     { 
+      headers:{
+         "Authorization": getCookieFromBrowser('token') 
+        } 
+    })
+    .then((response) => {
+      setInvestigators(response.data)
+    })
+
+    // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     // console.log('1:investigators: ', data)
+    //     setInvestigators(data)
+    //   })
+    //   .catch(err => console.error('err', err))
 
   }, [])
 
