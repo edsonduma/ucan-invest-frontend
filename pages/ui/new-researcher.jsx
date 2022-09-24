@@ -21,7 +21,7 @@ import Select from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
-import { LOCAL_BASE_URL } from '../../utils/constants';
+import { HEROKU_BASE_URL } from '../../utils/constants';
 import { getCookieFromBrowser } from '../../utils/cookie';
 
 // function Copyright(props) {
@@ -69,10 +69,18 @@ export default function NewResearcher() {
 
   const [typeOfAccounts, setTypeOfAccounts] = useState([])
   const [localities, setLocalities] = useState([])
+  const [countries, setCountries] = useState([])
+  const [provinces, setProvinces] = useState([])
+  const [municipalities, setMunicipalities] = useState([])
+  const [neighborhoods, setNeighborhoods] = useState([])
 
   // data of account
   const [typeOfAccountSelected, setTypeOfAccountSelected] = useState(1)
   const [myLocality, setMyLocality] = useState(1)
+  const [country, setCountry] = useState(1)
+  const [province, setProvince] = useState(1)
+  const [municipality, setMunicipality] = useState(1)
+  const [neighborhood, setNeighborhood] = useState(1)
   const [district, setDistrict] = useState(1)
 
   const [account, setAccount] = useState({
@@ -110,6 +118,57 @@ export default function NewResearcher() {
   // const [houseNumber, setHouseNumber] = useState('')
 
 
+  //on select a country
+  const handleProvinces = (e) => {
+    const value = e.target.value
+    setCountry(valuexios.get(`${HER}/places/under/${value}`, {
+      headers: {
+        "Authorization": getCookieFromBrowser('token')
+      }
+    })
+    .then((response) => {
+      const places = response.data
+      setProvinces(places)
+      if (places[0])
+        setProvince(places[0].pkLocality)
+    })
+  }
+
+  //on select a municipality
+  const handleMunicipalities = (e) => {
+    console.log('init')
+    const value = e.target.value
+    setProvince(valuexios.get(`${HER}/places/under/${value}`, {
+      headers: {
+        "Authorization": getCookieFromBrowser('token')
+      }
+    })
+    .then((response) => {
+      const places = response.data
+      // console.log('handleMunicipalities', places)
+      setMunicipalities(places)
+      if (places[0])
+        setMunicipality(places[0].pkLocality)
+    })
+  }
+
+  //on select a province
+  // const handleNeighborhood = (e) => {
+  //   const value = e.target.value
+  //   setMunicipality(value)
+  /xios.get(`${HER}/places/under/${value}`, {
+  //     headers: {
+  //       "Authorization": getCookieFromBrowser('token')
+  //     }
+  //   })
+  //   .then((response) => {
+  //     const places = response.data
+  //     setNeighborhood(places)
+  //     if (places[0])
+  //       setMunicipality(places[0].pkLocality)
+  //   })
+  // }
+
   const handleChangeTypeOfAccount = (event) => {
     const {
       target: { value },
@@ -120,18 +179,21 @@ export default function NewResearcher() {
     );
   };
 
-  useEffect(() => {
-
-    axios.get(`${LOCAL_BASE_URL}/type_of_account`, {
+  useEffect(() => {xios.get(`${HER}/type_of_account`, {
       headers: {
         "Authorization": getCookieFromBrowser('token')
       }
     })
     .then((response) => {
       setTypeOfAccounts(response.data)
+    })xios.get(`${HER}/places/countries`, {
+      headers: {
+        "Authorization": getCookieFromBrowser('token')
+      }
     })
-
-    axios.get(`${LOCAL_BASE_URL}/places`, {
+    .then((response) => {
+      setCountries(response.data)
+    })xios.get(`${HER}/places`, {
       headers: {
         "Authorization": getCookieFromBrowser('token')
       }
@@ -329,24 +391,74 @@ export default function NewResearcher() {
               </Grid>
               <Grid item xs={12}>
                 <FormControl sx={{ width: 395 }}>
-                  <InputLabel id="district">Distrito</InputLabel>
+                  <InputLabel id="country">País</InputLabel>
                   <Select
-                    labelId="Distrito"
-                    id="district"
-                    name="district"
-                    value={district}
-                    onChange={e => setDistrict(e.target.value)}
-                    input={<OutlinedInput label="Distrito" />}
+                    labelId="País"
+                    id="country"
+                    name="country"
+                    value={country}
+                    onChange={handleProvinces}
+                    input={<OutlinedInput label="country" />}
                     // multiple
                     // MenuProps={MenuProps}
                   >
-                    {localities.map(item => (
+                    {countries.map(country => (
                       <MenuItem
-                        key={item.pkLocality}
-                        value={item.pkLocality}
+                        key={country.pkLocality}
+                        value={country.pkLocality}
+                        style={getStyles(country, localities, theme)}
+                      >
+                        {country.designation}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl sx={{ width: 395 }}>
+                  <InputLabel id="province">Provincia</InputLabel>
+                  <Select
+                    labelId="Provincia"
+                    id="province"
+                    name="province"
+                    value={province}
+                    onChange={handleMunicipalities}
+                    input={<OutlinedInput label="Provincia" />}
+                    // multiple
+                    // MenuProps={MenuProps}
+                  >
+                    {provinces.map(province => (
+                      <MenuItem
+                        key={province.pkLocality}
+                        value={province.pkLocality}
+                        style={getStyles(province, localities, theme)}
+                      >
+                        {province.designation}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl sx={{ width: 395 }}>
+                  <InputLabel id="municipality">Municipio</InputLabel>
+                  <Select
+                    labelId="Municipio"
+                    id="municipality"
+                    name="municipality"
+                    value={municipality}
+                    onChange={e => setMyLocality(e.target.value)}
+                    input={<OutlinedInput label="Municipio" />}
+                    // multiple
+                    // MenuProps={MenuProps}
+                  >
+                    {municipalities.map(itmunicipality => (
+                      <MenuItem
+                        key={municipality.pkLocality}
+                        value={municipality.pkLocality}
                         style={getStyles(item, localities, theme)}
                       >
-                        {item.designation}
+                        {municipality.designation}
                       </MenuItem>
                     ))}
                   </Select>
@@ -359,13 +471,13 @@ export default function NewResearcher() {
                     labelId="Bairro"
                     id="bairro"
                     name="bairro"
-                    value={myLocality}
+                    value={neighborhood}
                     onChange={e => setMyLocality(e.target.value)}
                     input={<OutlinedInput label="Bairro" />}
                     // multiple
                     // MenuProps={MenuProps}
                   >
-                    {localities.map(item => (
+                    {neighborhoods.map(item => (
                       <MenuItem
                         key={item.pkLocality}
                         value={item.pkLocality}
