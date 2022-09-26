@@ -20,6 +20,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Select from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import axios from 'axios';
+import { LOCAL_BASE_URL } from '../../utils/constants';
+import { getCookieFromBrowser } from '../../utils/cookie';
 
 // function Copyright(props) {
 //   return (
@@ -120,28 +123,34 @@ export default function NewResearcher() {
 
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/type_of_account`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
-        },
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/type_of_account`, {
+      headers: {
+        "Authorization": getCookieFromBrowser('token')
       }
-    ).then(res => res.json())
-      .then(data => {
-        console.log('5:data: ', data)
-        setTypeOfAccounts(data)
-      })
+    })
+    .then((response) => {
+      setTypeOfAccounts(response.data)
+    })
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/places`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
-        },
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/places`, {
+      headers: {
+        "Authorization": getCookieFromBrowser('token')
       }
-    ).then(res => res.json())
-      .then(data => setLocalities(data))
+    })
+    .then((response) => {
+      setLocalities(response.data)
+    })
+
+    // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/type_of_account`)
+    // .then(res => res.json())
+    // .then(data => {
+    //   console.log('5:data: ', data)
+    //   setTypeOfAccounts(data)
+    // })
+
+    // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/places`)
+    // .then(res => res.json())
+    // .then(data => setLocalities(data))
     
   }, [])
   

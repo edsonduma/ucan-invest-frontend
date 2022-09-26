@@ -14,6 +14,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import Copyright from '/components/_copyright';
+import { authenticate } from '../../api/AuthenticateService';
+import { LOCAL_BASE_URL } from '../../utils/constants';
+import axios from 'axios';
+import { setCookie } from '../../utils/cookie';
+import { createJWTToken } from '../../utils/functions';
 
 const theme = createTheme();
 
@@ -24,36 +29,50 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
+    axios.post(`${process.env.NEXT_PUBLIC_BASE_URI}/authenticate`, {
+      username: data.get('email'),
+      password: data.get('password')
+    })
+    .then((response) => {
+      const token = createJWTToken(response.data.token)
+
+      console.log(token)
+
+      setCookie('token', token)
+      router.push('/ui/projects');
+    })
+    
     // console.log({
     //   email: data.get('email'),
     //   password: data.get('password'),
     // });
 
-    console.log('BaseURI: ', process.env.NEXT_PUBLIC_BASE_URI);
+    // console.log('BaseURI: ', process.env.NEXT_PUBLIC_BASE_URI);
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/account/login`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username: data.get('email'),
-        password: data.get('password'),
-      })
-    }).then(res => res.json())
-      .then(data => {
-        console.log('6:data: ', data)
+    // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/account/login`, {
+    //   method: 'POST',
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({
+    //     username: data.get('email'),
+    //     password: data.get('password'),
+    //   })
+    // }).then(res => res.json())
+    //   .then(data => {
+    //     console.log('6:data: ', data)
 
-        if (data)
-          router.push('/ui/projects');
-        else
-          alert('Login falhou!')
+    //     if (data)
+    //       router.push('/ui/projects');
+    //     else
+    //       alert('Login falhou!')
           
-      }).catch(error => {
-        console.log('1:error ', error)
-        alert('Ocorreu um erro no servidor!')
-        throw (error)
-      })
+    //   }).catch(error => {
+    //     console.log('1:error ', error)
+    //     alert('Ocorreu um erro no servidor!')
+    //     throw (error)
+    //   })
 
     // if (data.get('email') === 'ucanadmin')
     //   if (data.get('password') === 'ucan1234')

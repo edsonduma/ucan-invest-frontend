@@ -16,6 +16,9 @@ import Copyright from '/components/_copyright';
 import { useState, useEffect } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import axios from 'axios';
+import {LOCAL_BASE_URL} from '../../../utils/constants'
+import { getCookieFromBrowser } from '../../../utils/cookie';
 
 // function Copyright() {
 //   return (
@@ -73,22 +76,23 @@ export default function NewProject() {
 
   useEffect(() => {
 
-    console.log('host backend', process.env.NEXT_PUBLIC_BASE_URI);
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`,
+     { 
+      headers:{
+         "Authorization": getCookieFromBrowser('token') 
+        } 
+    })
+    .then((response) => {
+      setInvestigators(response.data)
+    })
 
-    fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URI}/investigators`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
-        },
-      }
-    ).then(res => res.json())
-      .then(data => {
-        console.log('1:investigators: ', data)
-        setInvestigators(data)
-      })
-      .catch(err => console.error('err', err))
+    // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     // console.log('1:investigators: ', data)
+    //     setInvestigators(data)
+    //   })
+    //   .catch(err => console.error('err', err))
 
   }, [])
 

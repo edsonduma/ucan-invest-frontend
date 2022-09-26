@@ -20,6 +20,8 @@ import Copyright from '/components/_copyright';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { borderRadius } from '@mui/system';
+import axios from 'axios';
+import { LOCAL_BASE_URL } from '../utils/constants';
 
 // function Copyright() {
 //   return (
@@ -44,12 +46,16 @@ export default function Home() {
 
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
-    .then(res => res.json())
-    .then(data => {
-      console.log('data: ', data)
-      setProjects(data)
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
+    .then((response) => {
+      setProjects(response.data)
     })
+    // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
+    // .then(res => res.json())
+    // .then(data => {
+    //   console.log('data: ', data)
+    //   setProjects(data)
+    // })
 
   }, [])
   
