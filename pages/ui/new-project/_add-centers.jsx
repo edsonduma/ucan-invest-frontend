@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { useState, useEffect } from 'react';
 import { FormControl, InputLabel, OutlinedInput, Select, Box, MenuItem, Chip, createTheme,  } from '@mui/material';
+import { getCookieFromBrowser } from '../../../utils/cookie';
 
 const theme = createTheme();
 
@@ -35,8 +36,15 @@ export default function AddCenters({ investigators, projectData, setProjectData 
   
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters`)
-    .then(res => res.json())
+    fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": getCookieFromBrowser('token')
+        },
+      }
+    ).then(res => res.json())
     .then(data => {
       // console.log('1:myCenters: ', data)
       setMyCenters(data)

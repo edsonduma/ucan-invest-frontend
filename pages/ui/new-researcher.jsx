@@ -96,7 +96,8 @@ export default function NewResearcher() {
     },
     district: {
       pkLocality: 1
-    }
+    },
+    account: {}
   })
 
   const handleClose = () => setOpenNotification({ ...openNotification, open: false })
@@ -203,14 +204,17 @@ export default function NewResearcher() {
     //     setHouseNumber('')
     //   }
     // })
+    person.account = account
+
+    console.log('person.account', person, person.account);
 
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`, {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": getCookieFromBrowser('token')
       },
       body: JSON.stringify({
-        account: account,
         person: person
       })
     }).then(res => res.json())
@@ -244,7 +248,8 @@ export default function NewResearcher() {
           },
           district: {
             pkLocality: 1
-          }
+          },
+          account: {}
         })
 
         // alert('cadastrado com sucesso!')

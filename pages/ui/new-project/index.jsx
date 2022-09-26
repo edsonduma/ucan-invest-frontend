@@ -146,10 +146,13 @@ export default function NewProject() {
 
   const handleSubmit = () => {
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
+    fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URI}/projects`, 
+      {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": getCookieFromBrowser('token')
       },
       body: JSON.stringify(projectData)
     }).then(res => res.json())
@@ -162,9 +165,9 @@ export default function NewProject() {
           // console.log('10:data: ', data)
           setProjectNumber(data.pkProject)
           setStatusNumber(0)
+          setSubmitSuccess(true)
         }
         setOpenNotification({...openNotification, open: true })
-        setSubmitSuccess(true)
       }).catch(error => {
         console.log('10:error ', error)
         alert('Ocorreu um erro no servidor!')
