@@ -18,7 +18,7 @@ function getStyles(item, typeOfAccount, theme) {
   };
 }
 
-export default function CenterData({ investigators }) {
+export default function CenterData({ investigators, faculties }) {
 
   const [projectData, setProjectData] = useState({
     title: "",
@@ -34,19 +34,9 @@ export default function CenterData({ investigators }) {
   const [teamLeaderSelected, setTeamLeaderSelected] = useState('')
   const [collegeSelected, setcollegeSelected] = useState('')
 
-  const [colleges, setColleges] = useState([])
+
 
   useEffect(() => {
-
-    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/faculties`, {
-      headers: {
-         "Authorization": getCookieFromBrowser('token')
-      }
-   })
-    .then((response) => {
-      console.log(response.data)
-      setColleges(response.data)
-    })
 
     // fetch(`${process.env.NEXT_PUBLUC_}/projects`, {
     //   method: 'POST',
@@ -128,11 +118,11 @@ export default function CenterData({ investigators }) {
               // multiple
               // MenuProps={MenuProps}
             >
-              {colleges.map(item => (
+              {faculties?.map(item => (
                 <MenuItem
                   key={item.pkCollege}
-                  value={item.pkColleges}
-                  style={getStyles(item, colleges, theme)}
+                  value={item.pkCollege}
+                  style={getStyles(item, faculties, theme)}
                 >
                   {item.designation}
                 </MenuItem>

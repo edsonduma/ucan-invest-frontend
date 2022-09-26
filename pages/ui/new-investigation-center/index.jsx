@@ -39,8 +39,30 @@ export default function NewProject() {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const [investigators, setInvestigators] = useState([])
+  const [faculties, setFaculties] = useState([])
+  const [areasOfActivity, setAreasOfActivity] = useState([])
 
   useEffect(() => {
+
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/area-activity`, {
+      headers: {
+        "Authorization": getCookieFromBrowser('token')
+      }
+   })
+    .then((response) => {
+      console.log(response.data)
+      setAreasOfActivity(response.data)
+    })
+
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/faculties`, {
+      headers: {
+        "Authorization": getCookieFromBrowser('token')
+      }
+   })
+    .then((response) => {
+      setFaculties(response.data)
+
+    })
 
     axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`, {
       headers: {
@@ -63,9 +85,9 @@ export default function NewProject() {
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <CenterData investigators={investigators} />;
+        return <CenterData investigators={investigators} faculties={faculties} />;
       case 1:
-        return <AddInvestigadors investigators={investigators} />;
+        return <AddInvestigadors investigators={investigators} areasOfActivity={areasOfActivity} />;
       case 2:
         return <Review />;
       default:

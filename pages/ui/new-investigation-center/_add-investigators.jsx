@@ -29,12 +29,10 @@ function getStyles(name, list, theme) {
   };
 }
 
-export default function AddInvestigadors({ investigators }) {
-
-    const [areasOfActivity, setAreasOfActivity] = useState([])
+export default function AddInvestigadors({ investigators, areasOfActivity }) {
 
     const [investigatorsSelected, setInvestigatorsSelected] = useState([])
-    const [areasOfActivitySelected, setAreasOfActivitySelected] = useState([])
+    const [areasOfActivitySelected, setAreasOfActivitySelected] = useState([])  
     
     useEffect(() => {
   
@@ -120,9 +118,9 @@ export default function AddInvestigadors({ investigators }) {
               )}
               MenuProps={MenuProps}
             >
-              {areasOfActivity.map(item => (
+              {areasOfActivity?.map(item => (
                 <MenuItem
-                  key={item.pkInvestigationCenter}
+                  key={item.pkAreaOfActivity}
                   value={item}
                   style={getStyles(item.designation, areasOfActivity, theme)}
                 >
