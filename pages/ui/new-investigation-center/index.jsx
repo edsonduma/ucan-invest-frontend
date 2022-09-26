@@ -14,7 +14,6 @@ import Review from './_review';
 import MyAppBar from '/components/_my-app-bar';
 import Copyright from '/components/_copyright';
 import { useState, useEffect } from 'react';
-import { LineAxisOutlined } from '@mui/icons-material';
 import axios from 'axios';
 import { LOCAL_BASE_URL } from '../../../utils/constants';
 import { getCookieFromBrowser } from '../../../utils/cookie';
