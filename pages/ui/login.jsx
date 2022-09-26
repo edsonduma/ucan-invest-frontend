@@ -30,7 +30,7 @@ export default function SignIn() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    axios.post(`${LOCAL_BASE_URL}/authenticate`, {
+    axios.post(`${process.env.NEXT_PUBLIC_BASE_URI}/authenticate`, {
       username: data.get('email'),
       password: data.get('password')
     })

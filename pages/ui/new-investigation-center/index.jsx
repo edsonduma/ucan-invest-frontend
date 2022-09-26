@@ -49,7 +49,7 @@ export default function NewProject() {
       }
    })
     .then((response) => {
-
+      setInvestigators(response.data)
     })
 
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
