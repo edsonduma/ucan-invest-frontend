@@ -207,6 +207,7 @@ export default function NewResearcher() {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`, {
       method: 'POST',
       headers: {
+        "Authorization": getCookieFromBrowser('token'),
         "Content-Type": "application/json"
       },
       body: JSON.stringify({

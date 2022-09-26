@@ -149,7 +149,8 @@ export default function NewProject() {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`, {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": getCookieFromBrowser('token')
       },
       body: JSON.stringify(projectData)
     }).then(res => res.json())
