@@ -42,7 +42,7 @@ export default function NewProject() {
 
   useEffect(() => {
 
-    axios.get(`${LOCAL_BASE_URL}/investigators`, {
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`, {
       headers: {
          "Authorization": getCookieFromBrowser('token') 
       }

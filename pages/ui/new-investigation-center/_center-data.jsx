@@ -4,6 +4,8 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { useState, useEffect } from 'react';
 import { createTheme, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import axios from 'axios';
+import { getCookieFromBrowser } from '../../../utils/cookie';
 
 const theme = createTheme();
 
@@ -34,22 +36,31 @@ export default function CenterData({ investigators }) {
 
   const [colleges, setColleges] = useState([])
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   fetch(`${process.env.NEXT_PUBLUC_}/projects`, {
-  //     method: 'POST',
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: {
-  //       "title": title,
-  //       "subtitle": subtitle,
-  //       "pdfFile": pdfFile,
-  //     }
-  //   })
-  //     .t 
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/faculties`, {
+      headers: {
+         "Authorization": getCookieFromBrowser('token')
+      }
+   })
+    .then((response) => {
+      console.log(response.data)
+      setColleges(response.data)
+    })
 
-  // }, [])
+    // fetch(`${process.env.NEXT_PUBLUC_}/projects`, {
+    //   method: 'POST',
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: {
+    //     "title": title,
+    //     "subtitle": subtitle,
+    //     "pdfFile": pdfFile,
+    //   }
+    // }) 
+
+  }, [])
 
   return (
     <React.Fragment>
@@ -119,7 +130,7 @@ export default function CenterData({ investigators }) {
             >
               {colleges.map(item => (
                 <MenuItem
-                  key={item.pkColleges}
+                  key={item.pkCollege}
                   value={item.pkColleges}
                   style={getStyles(item, colleges, theme)}
                 >
