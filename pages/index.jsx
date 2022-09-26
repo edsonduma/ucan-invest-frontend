@@ -46,7 +46,7 @@ export default function Home() {
 
   useEffect(() => {
 
-    axios.get(`${LOCAL_BASE_URL}/projects`)
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
     .then((response) => {
       setProjects(response.data)
     })

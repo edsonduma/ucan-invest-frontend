@@ -122,7 +122,7 @@ export default function NewResearcher() {
 
   useEffect(() => {
 
-    axios.get(`${LOCAL_BASE_URL}/type_of_account`, {
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/type_of_account`, {
       headers: {
         "Authorization": getCookieFromBrowser('token')
       }
@@ -131,7 +131,7 @@ export default function NewResearcher() {
       setTypeOfAccounts(response.data)
     })
 
-    axios.get(`${LOCAL_BASE_URL}/places`, {
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/places`, {
       headers: {
         "Authorization": getCookieFromBrowser('token')
       }
