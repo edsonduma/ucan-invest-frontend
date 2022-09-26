@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { useState, useEffect } from 'react';
 import { FormControl, InputLabel, OutlinedInput, Select, Box, MenuItem, Chip, createTheme,  } from '@mui/material';
+import { getCookieFromBrowser } from '../../../utils/cookie';
 
 const theme = createTheme();
 
@@ -40,7 +41,7 @@ export default function AddCenters({ investigators, projectData, setProjectData 
       {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
+          "Authorization": getCookieFromBrowser('token')
         },
       }
     ).then(res => res.json())

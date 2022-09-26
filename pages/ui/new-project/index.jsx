@@ -152,7 +152,7 @@ export default function NewProject() {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
-          "Authorization": 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2MzQyNTcwNCwiaWF0IjoxNjYyODIwOTA0fQ.DX765jd2iKAALFqlT0K0nsyxOtPWPwV8FeAeJe6M15bBx61E9lvxNfA5jTD7WddfdqbtrnY_hbfLeGXj1Be-RQ'
+          "Authorization": getCookieFromBrowser('token')
       },
       body: JSON.stringify(projectData)
     }).then(res => res.json())
