@@ -4,52 +4,39 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { useState, useEffect } from 'react';
 import { createTheme, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { getCookieFromBrowser } from '../../../utils/cookie';
 
 const theme = createTheme();
 
 function getStyles(item, typeOfAccount, theme) {
   return {
     fontWeight:
-    typeOfAccount.indexOf(item) === -1
+      typeOfAccount.indexOf(item) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
 }
 
-export default function CenterData({ investigators }) {
+export default function CenterData({ investigators, centerData, setCenterData }) {
 
-  const [projectData, setProjectData] = useState({
-    title: "",
-    subtitle: "",
-    pdfFile: "",
-    teamLeader: {
-      pkInvestigator: 0,
-    }
-  })
-
-  const [investigationCenterData, setInvestigationCenterData] = useState({})
-
-  const [teamLeaderSelected, setTeamLeaderSelected] = useState('')
-  const [collegeSelected, setcollegeSelected] = useState('')
+  // const [investigationCenterData, setInvestigationCenterData] = useState({})
+  // const [teamLeaderSelected, setTeamLeaderSelected] = useState('')
+  // const [collegeSelected, setcollegeSelected] = useState('')
 
   const [colleges, setColleges] = useState([])
 
-  // useEffect(() => {
-
-  //   fetch(`${process.env.NEXT_PUBLUC_}/projects`, {
-  //     method: 'POST',
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: {
-  //       "title": title,
-  //       "subtitle": subtitle,
-  //       "pdfFile": pdfFile,
-  //     }
-  //   })
-  //     .t 
-
-  // }, [])
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/faculties`, {
+      headers: {
+        "Authorization": getCookieFromBrowser('token')
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        // console.log('1:colleges: ', data)
+        setColleges(data)
+      })
+  }, [])
 
   return (
     <React.Fragment>
@@ -60,12 +47,17 @@ export default function CenterData({ investigators }) {
         <Grid item xs={12}>
           <TextField
             required
-            id="name"
-            name="name"
+            id="designation"
+            name="designation"
             label="Nome"
             fullWidth
             autoComplete="Digitar o Nome"
             variant="standard"
+            value={centerData?.designation}
+            onChange={e => setCenterData({
+              ...centerData,
+              [e.target.name]: e.target.value
+            })}
           />
         </Grid>
         <Grid item xs={12}>
@@ -77,20 +69,28 @@ export default function CenterData({ investigators }) {
             fullWidth
             autoComplete="Descrição"
             variant="standard"
+            value={centerData?.description}
+            onChange={e => setCenterData({
+              ...centerData,
+              [e.target.name]: e.target.value
+            })}
           />
         </Grid>
         <Grid item xs={12}>
           <FormControl sx={{ width: 505 }}>
-            <InputLabel id="teamLeader">Responsavel do Centro</InputLabel>
+            <InputLabel id="centerLeader">Responsável do Centro</InputLabel>
             <Select
-              labelId="Lider do Projecto"
-              id="teamLeader"
-              name="teamLeader"
-              value={teamLeaderSelected}
-              onChange={e => setTeamLeaderSelected(e.target.value)}
-              input={<OutlinedInput label="Lider do Projecto" />}
-              // multiple
-              // MenuProps={MenuProps}
+              labelId="Responsável do Centro"
+              id="centerLeader"
+              name="centerLeader"
+              value={centerData?.centerLeader.pkInvestigator}
+              onChange={e => setCenterData({
+                ...centerData,
+                centerLeader: {
+                  pkInvestigator: e.target.value
+                }
+              })}
+              input={<OutlinedInput label="Responsável do Centro" />}
             >
               {investigators?.map(item => (
                 <MenuItem
@@ -106,21 +106,24 @@ export default function CenterData({ investigators }) {
         </Grid>
         <Grid item xs={12}>
           <FormControl sx={{ width: 505 }}>
-            <InputLabel id="college">Faculdade</InputLabel>
+            <InputLabel id="faculties">Faculdade</InputLabel>
             <Select
               labelId="Faculdade"
-              id="college"
-              name="college"
-              value={collegeSelected}
-              onChange={e => setcollegeSelected(e.target.value)}
+              id="faculties"
+              name="faculties"
+              value={centerData?.faculties.pkCollege}
+              onChange={e => setCenterData({
+                  ...centerData,
+                  faculties: {
+                    pkCollege: e.target.value
+                  }
+                })}
               input={<OutlinedInput label="Selecione a Faculdade" />}
-              // multiple
-              // MenuProps={MenuProps}
             >
               {colleges.map(item => (
                 <MenuItem
-                  key={item.pkColleges}
-                  value={item.pkColleges}
+                  key={item.pkCollege}
+                  value={item.pkCollege}
                   style={getStyles(item, colleges, theme)}
                 >
                   {item.designation}
@@ -129,38 +132,6 @@ export default function CenterData({ investigators }) {
             </Select>
           </FormControl>
         </Grid>
-        {/* <Grid item xs={12}>
-          <TextField
-            required
-            id="team_leader"
-            name="team_leader"
-            label="Lider do Projecto"
-            fullWidth
-            autoComplete="Lider do Projecto"
-            variant="standard"
-          />
-        </Grid> */}
-        {/* <Grid item xs={12}>
-          <TextField
-            id="action_field"
-            name="action_field"
-            label="Area de Actuação"
-            fullWidth
-            autoComplete="Digite a Area de Actuação"
-            variant="standard"
-          />
-        </Grid> */}
-        {/* <Grid item xs={12}>
-          <TextField
-            required
-            id="college"
-            name="college"
-            label="Faculdade"
-            fullWidth
-            autoComplete="Digite a Faculdade"
-            variant="standard"
-          />
-        </Grid> */}
       </Grid>
     </React.Fragment>
   );

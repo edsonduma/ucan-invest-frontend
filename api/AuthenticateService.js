@@ -1,8 +1,7 @@
 import axios from "axios";
-import { LOCAL_BASE_URL } from "../utils/constants";
 
 export function authenticate(username, password) {
-  axios.post(`${LOCAL_BASE_URL}/authenticate`, {
+  axios.post(`${process.env.NEXT_PUBLIC_BASE_URI}/authenticate`, {
     username,
     password
   })

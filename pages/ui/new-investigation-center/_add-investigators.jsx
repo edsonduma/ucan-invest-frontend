@@ -6,6 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useState, useEffect } from 'react';
 import { Box, Chip, createTheme, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { getCookieFromBrowser } from '../../../utils/cookie';
 
 const theme = createTheme();
 
@@ -29,22 +30,21 @@ function getStyles(name, list, theme) {
   };
 }
 
-export default function AddInvestigadors({ investigators }) {
+export default function AddInvestigadors({ investigators, centerData, setCenterData }) {
 
     const [areasOfActivity, setAreasOfActivity] = useState([])
 
-    const [investigatorsSelected, setInvestigatorsSelected] = useState([])
-    const [areasOfActivitySelected, setAreasOfActivitySelected] = useState([])
-    
     useEffect(() => {
-  
-      // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
-      // .then(res => res.json())
-      // .then(data => {
-      //   console.log('data: ', data)
-      //   setInvestigators(data)
-      // })
-  
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/area-activity`, {
+        headers: {
+          "Authorization": getCookieFromBrowser('token')
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          // console.log('1:areasOfActivity: ', data)
+          setAreasOfActivity(data)
+        })
     }, [])
     
   return (
@@ -60,15 +60,15 @@ export default function AddInvestigadors({ investigators }) {
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={investigatorsSelected}
+              value={centerData?.members}
               onChange={e => {
                 const {
                   target: { value },
                 } = e;
-                setInvestigatorsSelected(
-                  // On autofill we get a stringified value.
-                  typeof value === 'string' ? value.split(',') : value,
-                );
+                setCenterData({
+                  ...centerData,
+                  members: typeof value === 'string' ? value.split(',') : value,
+                })
               }}
               input={<OutlinedInput id="select-multiple-centers" label="Selecione os Investigadores" />}
               renderValue={(selected) => (
@@ -100,21 +100,21 @@ export default function AddInvestigadors({ investigators }) {
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={areasOfActivity}
+              value={centerData?.areaOfActivities}
               onChange={e => {
                 const {
                   target: { value },
                 } = e;
-                setCenters(
-                  // On autofill we get a stringified value.
-                  typeof value === 'string' ? value.split(',') : value,
-                );
+                setCenterData({
+                  ...centerData,
+                  areaOfActivities: typeof value === 'string' ? value.split(',') : value,
+                })
               }}
               input={<OutlinedInput id="select-multiple-centers" label="Selecione as Area de Actuação" />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map(item => (
-                    <Chip key={item.pkInvestigationCenter} label={item.designation} />
+                    <Chip key={item.pkAreaOfActivity} label={item.designation} />
                   ))}
                 </Box>
               )}
@@ -122,7 +122,7 @@ export default function AddInvestigadors({ investigators }) {
             >
               {areasOfActivity.map(item => (
                 <MenuItem
-                  key={item.pkInvestigationCenter}
+                  key={item.pkAreaOfActivity}
                   value={item}
                   style={getStyles(item.designation, areasOfActivity, theme)}
                 >

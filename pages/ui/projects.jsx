@@ -21,7 +21,6 @@ import Copyright from '/components/_copyright';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
-import { LOCAL_BASE_URL } from '../../utils/constants';
 
 // function Copyright() {
 //   return (
@@ -46,7 +45,7 @@ export default function Album() {
 
   useEffect(() => {
 
-    axios.get(`${LOCAL_BASE_URL}/projects`)
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
     .then((response) => {
       setProjects(response.data)
     })

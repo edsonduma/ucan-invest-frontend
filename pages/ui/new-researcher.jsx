@@ -21,7 +21,6 @@ import Select from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
-import { LOCAL_BASE_URL } from '../../utils/constants';
 import { getCookieFromBrowser } from '../../utils/cookie';
 
 // function Copyright(props) {
@@ -72,7 +71,7 @@ export default function NewResearcher() {
 
   // data of account
   const [typeOfAccountSelected, setTypeOfAccountSelected] = useState(1)
-  const [myLocality, setMyLocality] = useState(1)
+  // const [myLocality, setMyLocality] = useState(1)
   const [district, setDistrict] = useState(1)
 
   const [account, setAccount] = useState({
@@ -91,14 +90,14 @@ export default function NewResearcher() {
     birthday_date: '',
     street: '',
     houseNumber: 0,
-    locality: {
-      pkLocality: 1
-    },
-    district: {
-      pkLocality: 1
-    },
     account: {}
   })
+  // locality: {
+  //   pkLocality: 1
+  // },
+  // district: {
+  //   pkLocality: 1
+  // },
 
   const handleClose = () => setOpenNotification({ ...openNotification, open: false })
 
@@ -156,11 +155,12 @@ export default function NewResearcher() {
   
   const handleSubmit = (event) => {
     event.preventDefault()
+    console.log('handleSubmit:investigators');
 
     account.typeOfAccount.pkTypeOfAccount = typeOfAccountSelected
 
-    person.locality.pkLocality = myLocality
-    person.district.pkLocality = district
+    // person.locality.pkLocality = myLocality
+    // person.district.pkLocality = district
 
     console.log('2:data: ',
       account,
@@ -332,7 +332,7 @@ export default function NewResearcher() {
                   onChange={e => setPerson({...person, [e.target.name]: e.target.value})}
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FormControl sx={{ width: 395 }}>
                   <InputLabel id="district">Distrito</InputLabel>
                   <Select
@@ -356,8 +356,8 @@ export default function NewResearcher() {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
-              <Grid item xs={12}>
+              </Grid> */}
+              {/* <Grid item xs={12}>
                 <FormControl sx={{ width: 395 }}>
                   <InputLabel id="bairro">Bairro</InputLabel>
                   <Select
@@ -381,7 +381,8 @@ export default function NewResearcher() {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid> */}
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
