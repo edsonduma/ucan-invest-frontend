@@ -17,7 +17,6 @@ import { useState, useEffect } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
-import {LOCAL_BASE_URL} from '../../../utils/constants'
 import { getCookieFromBrowser } from '../../../utils/cookie';
 
 // function Copyright() {
@@ -147,7 +146,7 @@ export default function NewProject() {
   const handleSubmit = () => {
 
     fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URI}/projects`, 
+      `${process.env.NEXT_PUBLIC_BASE_URI}/projects`,
       {
         method: 'POST',
         headers: {
@@ -173,7 +172,6 @@ export default function NewProject() {
         alert('Ocorreu um erro no servidor!')
         throw (error)
       })
-
   }
 
   return (
@@ -195,15 +193,14 @@ export default function NewProject() {
           <React.Fragment>
             {activeStep === steps.length ? (
               <React.Fragment>
-                {submitSuccess ?
                 <Typography variant="h5" gutterBottom>
-                  Cadastro concluido
+                  {
+                    submitSuccess ?
+                    'Cadastro concluido.'
+                    :
+                    'Em processamento...'
+                  }
                 </Typography>
-                :
-                <Typography variant="h5" gutterBottom>
-                  Em processamento...
-                </Typography>
-                }
                 {submitSuccess &&
                 <Typography variant="subtitle1">
                   {/* 'O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.' */}

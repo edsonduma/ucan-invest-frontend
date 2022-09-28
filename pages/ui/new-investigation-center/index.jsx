@@ -7,6 +7,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import MuiAlert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CenterData from './_center-data';
 import AddInvestigadors from './_add-investigators';
@@ -14,36 +15,66 @@ import Review from './_review';
 import MyAppBar from '/components/_my-app-bar';
 import Copyright from '/components/_copyright';
 import { useState, useEffect } from 'react';
-import { LineAxisOutlined } from '@mui/icons-material';
 import axios from 'axios';
-import { LOCAL_BASE_URL } from '../../../utils/constants';
 import { getCookieFromBrowser } from '../../../utils/cookie';
+import { Snackbar } from '@mui/material';
+import { useRouter } from 'next/router';
 
-// function Copyright() {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center">
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         UCAN
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const steps = ['Dados do Centro', 'Investigadores e Areas de Actuação', 'Rever os Dados'];
 
 const theme = createTheme();
 
-export default function NewProject() {
+export default function NewCenter() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const router = useRouter()
 
   const [investigators, setInvestigators] = useState([])
+  const [centerLeaderName, setCenterLeaderName] = useState('')
+  const [centerNumber, setCenterNumber] = useState('')
+
+  const [centerData, setCenterData] = useState({
+    designation: "",
+    description: "",
+    centerLeader: {
+      pkInvestigator: 0,
+    },
+    faculties: {
+      pkCollege: 0,
+    },
+    members: [],
+    areaOfActivities: []
+  })
+  
+  // handleSubmit and fix errors
+  const errorStatus = {
+    message: ['Salvo com sucesso!', 'Erro ao salvar!'],
+    severity: ['success', 'error']
+  }
+
+  const [openNotification, setOpenNotification] = useState({
+    open: false,
+    vertical: 'bottom',
+    horizontal: 'right'
+  })
+  const { vertical, horizontal, open} = openNotification
+  const [statusNumber, setStatusNumber] = useState(-1)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+
+  const handleClose = () => {
+    setOpenNotification({ ...openNotification, open: false })
+
+    setTimeout(() => {
+      router.replace('/ui/new-investigation-center')
+    }, 1000 * 6)
+  }
 
   useEffect(() => {
 
-    axios.get(`${LOCAL_BASE_URL}/investigators`, {
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`, {
       headers: {
          "Authorization": getCookieFromBrowser('token') 
       }
@@ -61,14 +92,36 @@ export default function NewProject() {
 
   }, [])
 
+  useEffect(() => {
+    investigators.find(e => {
+      if (e.pkInvestigator === centerData.centerLeader.pkInvestigator)
+        setCenterLeaderName(e.person.firstname + ' ' + e.person.lastname)
+    })
+  }, [centerData.centerLeader.pkInvestigator])
+  
+  useEffect(() => {
+    if (activeStep === steps.length) handleSubmit()
+  }, [activeStep])
+
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <CenterData investigators={investigators} />;
+        return <CenterData
+                investigators={investigators}
+                centerData={centerData}
+                setCenterData={setCenterData}
+              />;
       case 1:
-        return <AddInvestigadors investigators={investigators} />;
+        return <AddInvestigadors
+                investigators={investigators}
+                centerData={centerData}
+                setCenterData={setCenterData}
+              />;
       case 2:
-        return <Review />;
+        return <Review
+                centerData={centerData}
+                centerLeaderName={centerLeaderName}
+              />;
       default:
         throw new Error('Passo desconhecido');
     }
@@ -81,6 +134,38 @@ export default function NewProject() {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+  const handleSubmit = () => {
+
+    fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters`,
+      {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": getCookieFromBrowser('token')
+      },
+      body: JSON.stringify(centerData)
+    }).then(res => res.json())
+      .then(data => {
+        console.log('11:data.status: ', data.status)
+        if (data.status) {
+          // console.log('11:data error: ', data)
+          setStatusNumber(1)
+        } else {
+          console.log('11:data: ', data)
+          setCenterNumber(data.pkInvestigationCenter)
+          setStatusNumber(0)
+          setSubmitSuccess(true)
+        }
+        setOpenNotification({...openNotification, open: true })
+      }).catch(error => {
+        console.log('11:error ', error)
+        alert('Ocorreu um erro no servidor!')
+        throw (error)
+      })
+
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -118,11 +203,18 @@ export default function NewProject() {
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
-                  Cadastro concluido.
+                  {
+                    submitSuccess ?
+                    'Cadastro concluido.'
+                    :
+                    'Em processamento...'
+                  }
                 </Typography>
+                {submitSuccess &&
                 <Typography variant="subtitle1">
-                  O centro número #1234 foi criado com sucesso e será publicado após aprovação do conselho.
+                  O centro número #{centerNumber} foi criado com sucesso.
                 </Typography>
+                }
               </React.Fragment>
             ) : (
               <React.Fragment>
@@ -170,6 +262,22 @@ export default function NewProject() {
         </Container>
       </Box>
       {/* End footer */}
+
+      <Snackbar 
+        open={open} 
+        autoHideDuration={6000} 
+        onClose={handleClose}
+        anchorOrigin={{vertical, horizontal}}
+        key={vertical + horizontal}
+      >
+        <Alert 
+          onClose={handleClose} 
+          severity={errorStatus.severity[statusNumber]} 
+          sx={{ width: '110%' }}
+        >
+          {errorStatus.message[statusNumber]}
+        </Alert>
+      </Snackbar>
       
     </ThemeProvider>
   );

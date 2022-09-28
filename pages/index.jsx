@@ -21,7 +21,6 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { borderRadius } from '@mui/system';
 import axios from 'axios';
-import { LOCAL_BASE_URL } from '../utils/constants';
 
 // function Copyright() {
 //   return (

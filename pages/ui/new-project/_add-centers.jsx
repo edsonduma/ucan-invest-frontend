@@ -90,8 +90,6 @@ export default function AddCenters({ investigators, projectData, setProjectData 
                   ...projectData,
                   centers: typeof value === 'string' ? value.split(',') : value,
                 })
-
-                // changeCentersSelected(centersSelected)
               }}
               input={<OutlinedInput id="select-multiple-centers" label="Selecione os Centros" />}
               renderValue={(selected) => (
