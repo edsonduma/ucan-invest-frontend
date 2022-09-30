@@ -102,7 +102,7 @@ export default function Album() {
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-              {projects.map(item => (
+              {projects.filter((project) => project.approved).map(item => (
                 <Grid item key={item.pkProject} xs={12} sm={6} md={4}>
                   <Card
                     sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}

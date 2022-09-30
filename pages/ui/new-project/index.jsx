@@ -52,7 +52,7 @@ export default function NewProject() {
     vertical: 'bottom',
     horizontal: 'right'
   })
-  const { vertical, horizontal, open} = openNotification
+  const { vertical, horizontal, open } = openNotification
   const [statusNumber, setStatusNumber] = useState(-1)
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const [teamLeaderName, setTeamLeaderName] = useState('')
@@ -76,14 +76,14 @@ export default function NewProject() {
   useEffect(() => {
 
     axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`,
-     { 
-      headers:{
-         "Authorization": getCookieFromBrowser('token') 
-        } 
-    })
-    .then((response) => {
-      setInvestigators(response.data)
-    })
+      {
+        headers: {
+          "Authorization": getCookieFromBrowser('token')
+        }
+      })
+      .then((response) => {
+        setInvestigators(response.data)
+      })
 
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
     //   .then(res => res.json())
@@ -105,7 +105,7 @@ export default function NewProject() {
 
     // console.log('teamLeaderName', teamLeaderName);
   }, [projectData.teamLeader.pkInvestigator])
-  
+
   useEffect(() => {
     // console.log('testando...', activeStep, steps.length);
     if (activeStep === steps.length) handleSubmit()
@@ -115,21 +115,21 @@ export default function NewProject() {
     switch (step) {
       case 0:
         return <ProjectData
-                investigators={investigators}
-                projectData={projectData}
-                setProjectData={setProjectData}
-              />;
+          investigators={investigators}
+          projectData={projectData}
+          setProjectData={setProjectData}
+        />;
       case 1:
-        return <AddCenters 
-                investigators={investigators} 
-                projectData={projectData}
-                setProjectData={setProjectData}
-              />;
+        return <AddCenters
+          investigators={investigators}
+          projectData={projectData}
+          setProjectData={setProjectData}
+        />;
       case 2:
         return <Review
-                  projectData={projectData}
-                  teamLeaderName={teamLeaderName}
-              />;
+          projectData={projectData}
+          teamLeaderName={teamLeaderName}
+        />;
       default:
         throw new Error('Passo desconhecido');
     }
@@ -152,9 +152,9 @@ export default function NewProject() {
         headers: {
           "Content-Type": "application/json",
           "Authorization": getCookieFromBrowser('token')
-      },
-      body: JSON.stringify(projectData)
-    }).then(res => res.json())
+        },
+        body: JSON.stringify(projectData)
+      }).then(res => res.json())
       .then(data => {
         // console.log('10:data.status: ', data.status)
         if (data.status) {
@@ -166,7 +166,7 @@ export default function NewProject() {
           setStatusNumber(0)
           setSubmitSuccess(true)
         }
-        setOpenNotification({...openNotification, open: true })
+        setOpenNotification({ ...openNotification, open: true })
       }).catch(error => {
         console.log('10:error ', error)
         alert('Ocorreu um erro no servidor!')
@@ -196,16 +196,16 @@ export default function NewProject() {
                 <Typography variant="h5" gutterBottom>
                   {
                     submitSuccess ?
-                    'Cadastro concluido.'
-                    :
-                    'Em processamento...'
+                      'Cadastro concluido.'
+                      :
+                      'Em processamento...'
                   }
                 </Typography>
                 {submitSuccess &&
-                <Typography variant="subtitle1">
-                  {/* 'O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.' */}
-                  O projecto número #{projectNumber} foi criado com sucesso e será publicado após aprovação do conselho.
-                </Typography>
+                  <Typography variant="subtitle1">
+                    {/* 'O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.' */}
+                    O projecto número #{projectNumber} foi criado com sucesso e será publicado após aprovação do conselho.
+                  </Typography>
                 }
               </React.Fragment>
             ) : (
@@ -255,16 +255,16 @@ export default function NewProject() {
       </Box>
       {/* End footer */}
 
-      <Snackbar 
-        open={open} 
-        autoHideDuration={6000} 
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{vertical, horizontal}}
+        anchorOrigin={{ vertical, horizontal }}
         key={vertical + horizontal}
       >
-        <Alert 
-          onClose={handleClose} 
-          severity={errorStatus.severity[statusNumber]} 
+        <Alert
+          onClose={handleClose}
+          severity={errorStatus.severity[statusNumber]}
           sx={{ width: '100%' }}
         >
           {errorStatus.message[statusNumber]}
