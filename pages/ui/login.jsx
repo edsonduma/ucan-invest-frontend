@@ -39,7 +39,7 @@ export default function SignIn() {
       console.log(token)
 
       setCookie('token', token)
-      router.push('/ui/projects');
+      router.replace('/ui/home');
     })
     
     // console.log({
@@ -63,7 +63,7 @@ export default function SignIn() {
     //     console.log('6:data: ', data)
 
     //     if (data)
-    //       router.push('/ui/projects');
+    //       router.push('/ui/home');
     //     else
     //       alert('Login falhou!')
           

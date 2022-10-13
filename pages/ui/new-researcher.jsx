@@ -491,7 +491,7 @@ export default function NewResearcher() {
 
       {/* Footer */}
       <Box
-        style={{ marginTop: '21.5vh' }}
+        // style={{ marginTop: '21.5vh' }}
         component="footer"
         sx={{
           py: 3,
@@ -501,6 +501,12 @@ export default function NewResearcher() {
             theme.palette.mode === 'light'
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
+        }}
+        style={{ 
+          position: 'relative',
+          bottom: '0px', 
+          width: '100%',
+          marginTop: '2vh'
         }}
       >
         <Container maxWidth="sm">

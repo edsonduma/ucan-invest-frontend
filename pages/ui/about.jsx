@@ -56,6 +56,11 @@ export default function StickyFooter() {
                                 ? theme.palette.grey[200]
                                 : theme.palette.grey[800],
                     }}
+                    style={{ 
+                      position: 'relative',
+                      bottom: '0px', 
+                      width: '100%'
+                    }}
                 >
                     <Container maxWidth="sm">
                         {/* <Typography variant="body1">

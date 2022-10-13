@@ -2,7 +2,7 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { createTheme, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { Button, createTheme, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 const theme = createTheme();
@@ -10,7 +10,7 @@ const theme = createTheme();
 function getStyles(item, typeOfAccount, theme) {
   return {
     fontWeight:
-    typeOfAccount.indexOf(item) === -1
+      typeOfAccount.indexOf(item) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
@@ -56,6 +56,55 @@ export default function ProjectData({ investigators, projectData, setProjectData
           />
         </Grid>
         <Grid item xs={12}>
+          {/* <TextField
+            required
+            id="cover"
+            name="cover"
+            label="Capa"
+            fullWidth
+            autoComplete="Selecione a capa do projecto"
+            variant="standard"
+            value={projectData?.cover}
+            onChange={e => setProjectData({
+              ...projectData,
+              [e.target.name]: e.target.value
+            })}
+          /> */}
+
+          {/* <Button
+            variant="contained"
+            component="label"
+          >
+            Selecione a capa do projecto
+            <input
+              type="file"
+              // hidden
+              id="cover"
+              name="cover"
+              value={projectData?.cover}
+              onChange={e => setProjectData({
+                ...projectData,
+                [e.target.name]: e.target.value
+              })
+            }
+            />
+          </Button> */}
+
+          <TextField
+            type="file"
+            required
+            id="cover"
+            name="cover"
+            fullWidth
+            // variant="standard"
+            value={projectData?.cover}
+            onChange={e => setProjectData({
+              ...projectData,
+              [e.target.name]: e.target.value
+            })}
+          />
+        </Grid>
+        <Grid item xs={12}>
           <FormControl sx={{ width: 505 }}>
             <InputLabel id="teamLeader">Lider do Projecto</InputLabel>
             <Select
@@ -64,14 +113,14 @@ export default function ProjectData({ investigators, projectData, setProjectData
               name="teamLeader"
               value={projectData?.teamLeader.pkInvestigator}
               onChange={e => setProjectData({
-                  ...projectData,
-                  teamLeader: {
-                    pkInvestigator: e.target.value
-                  }
-                })}
+                ...projectData,
+                teamLeader: {
+                  pkInvestigator: e.target.value
+                }
+              })}
               input={<OutlinedInput label="Lider do Projecto" />}
-              // multiple
-              // MenuProps={MenuProps}
+            // multiple
+            // MenuProps={MenuProps}
             >
               {investigators?.map(item => (
                 <MenuItem

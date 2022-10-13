@@ -1,8 +1,8 @@
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
+// import CameraIcon from '@mui/icons-material/PhotoCamera';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import LogoutIcon from '@mui/icons-material/Logout';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -16,10 +16,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import MyAppBar from '/components/_my-app-bar';
 import Copyright from '/components/_copyright';
-import { useState } from 'react';
 import { useEffect } from 'react';
+import { useState } from 'react';
+import { borderRadius } from '@mui/system';
 import axios from 'axios';
 
 // function Copyright() {
@@ -35,11 +35,11 @@ import axios from 'axios';
 //   );
 // }
 
-// const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// const projects = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const theme = createTheme();
 
-export default function Album() {
+export default function Home() {
 
   const [projects, setProjects] = useState([])
 
@@ -49,7 +49,6 @@ export default function Album() {
     .then((response) => {
       setProjects(response.data)
     })
-
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
     // .then(res => res.json())
     // .then(data => {
@@ -61,12 +60,63 @@ export default function Album() {
   
   return (
     <ThemeProvider theme={theme}>
-      <MyAppBar />
-
-      <main style={{ backgroundColor: 'white' }}>
-        {/* <main> */}
+      <CssBaseline />
+      <AppBar position="relative">
+        <Toolbar>
+          {/* <CameraIcon sx={{ mr: 2 }} /> */}
+          {/* import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'; */}
+          {/* <MonetizationOnIcon sx={{ mr: 2 }} /> */}
+          <img src="/img/logo.png" alt="ucanic" style={{
+            // maxWidth: 120,
+            // marginRight: '10px',
+            // borderRadius:'30px',
+            // boxShadow: '1px 2px 9px black'
+            maxWidth: 160,
+            marginRight: '10px',
+            padding: '0.3em',
+            borderRadius:'5em',
+            boxShadow: '1px 2px 9px black',
+            backgroundColor: 'white'
+          }}  />
+          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+            {/* UCAN Projects */}
+          </Typography>
+          {/* <nav>
+            <Link
+              variant="button"
+              color="text.primary"
+              href="#"
+              sx={{ my: 1, mx: 1.5 }}
+            >
+              Features
+            </Link>
+            <Link
+              variant="button"
+              color="text.primary"
+              href="#"
+              sx={{ my: 1, mx: 1.5 }}
+            >
+              Enterprise
+            </Link>
+            <Link
+              variant="button"
+              color="text.primary"
+              href="#"
+              sx={{ my: 1, mx: 1.5 }}
+            >
+              Support
+            </Link>
+          </nav> */}
+          <Button style={{ backgroundColor: 'white' }} href="/ui/login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+          {/* <Button href="/ui/login" variant="outlined" sx={{ my: 1, mx: 1.5 }}> */}
+            Login
+          </Button>
+        </Toolbar>
+      </AppBar>
+      {/* <main style={{ backgroundColor: 'white' }}> */}
+      <main>
         {/* Hero unit */}
-        {/* <Box
+        <Box
           sx={{
             bgcolor: 'background.paper',
             pt: 8,
@@ -85,7 +135,7 @@ export default function Album() {
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
               Esta é uma pequena apresentação dos vários projectos que a ucan produz no seu dia a dia.
-            </Typography> */}
+            </Typography>
             {/* <Stack
               sx={{ pt: 4 }}
               direction="row"
@@ -95,13 +145,13 @@ export default function Album() {
               <Button variant="contained">Main call to action</Button>
               <Button variant="outlined">Secondary action</Button>
             </Stack> */}
-          {/* </Container>
-        </Box> */}
+          </Container>
+        </Box>
 
         {/* <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="mycontent"> */}
-        <Container sx={{ py: 8 }} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4}>
+          <Container sx={{ py: 8 }} maxWidth="md">
+            {/* End hero unit */}
+            <Grid container spacing={4}>
               {projects.map(item => (
                 <Grid item key={item.pkProject} xs={12} sm={6} md={4}>
                   <Card
@@ -135,34 +185,36 @@ export default function Album() {
                   </Card>
                 </Grid>
               ))}
-          </Grid>
-        </Container>
+            </Grid>
+          </Container>
         {/* </Box> */}
 
       </main>
-
+      
       {/* Footer */}
       {/* <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer"> */}
-      {/* <Typography variant="h6" align="center" gutterBottom>
+        {/* <Typography variant="h6" align="center" gutterBottom>
           Footer
         </Typography> */}
-      {/* <hr /> */}
-      {/* <Typography
+        {/* <hr />
+        <Typography
           variant="subtitle1"
           align="center"
           color="text.secondary"
           component="p"
         > */}
-      {/* Something here to give the footer a purpose! */}
-      {/* </Typography> */}
-      {/* <Copyright /> */}
+          {/* Something here to give the footer a purpose! */}
+        {/* </Typography>
+        <Copyright />
+      </Box> */}
+      {/* End footer */}
 
-
-      {/* <Copyright sx={{ mt: 22, mb: 4 }} /> */}
-
-
-      {/* </Box> */}
-
+      <br />
+      <br />
+      <br />
+      <br />
+      
+      {/* Footer */}
       <Box
         component="footer"
         sx={{
@@ -174,11 +226,13 @@ export default function Album() {
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
         }}
+        style={{ 
+          position: 'fixed',
+          bottom: '0px', 
+          width: '100%'
+        }}
       >
         <Container maxWidth="sm">
-          {/* <Typography variant="body1">
-                            UCAN Projects
-                        </Typography> */}
           <Copyright />
         </Container>
       </Box>

@@ -18,7 +18,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 const navItems = ['Home', 'Novo Projecto', 'Novo Centro', 'Novo Investigador', 'Sobre'];
-const linkItems = ['projects', 'new-project', 'new-investigation-center', 'new-researcher', 'about'];
+const linkItems = ['home', 'new-project', 'new-investigation-center', 'new-researcher', 'about'];
 
 const theme = createTheme();
 
