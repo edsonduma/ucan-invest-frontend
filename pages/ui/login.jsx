@@ -147,7 +147,6 @@ export default function SignIn() {
 
       {/* Footer */}
       <Box
-        style={{ marginTop: '28.5vh' }}
         component="footer"
         sx={{
           py: 3,
@@ -157,6 +156,11 @@ export default function SignIn() {
             theme.palette.mode === 'light'
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
+        }}
+        style={{ 
+          position: 'absolute',
+          bottom: '0px', 
+          width: '100%'
         }}
       >
         <Container maxWidth="sm">
