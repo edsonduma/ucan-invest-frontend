@@ -30,7 +30,7 @@
 	transform: scale(0.5);
 } */
 
-.menu{
+.menu {
 	display: flex;
 	flex-direction: row;
 	list-style-type: none;
@@ -44,8 +44,6 @@
 	align-items: center;
 	flex-basis: 100%;
 	text-transform: capitalize;
-	
-
 }
 
 .menu li{
