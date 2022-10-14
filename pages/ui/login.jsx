@@ -18,12 +18,28 @@ import { authenticate } from '../../api/AuthenticateService';
 import axios from 'axios';
 import { setCookie } from '../../utils/cookie';
 import { createJWTToken } from '../../utils/functions';
+import { Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
+import { useState } from 'react';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const theme = createTheme();
 
 export default function SignIn() {
 
   const router = useRouter()
+
+  const [openNotification, setOpenNotification] = useState({
+    open: false,
+    vertical: 'bottom',
+    horizontal: 'right'
+  })
+  const { vertical, horizontal, open} = openNotification
+
+  const handleClose = () => setOpenNotification({ ...openNotification, open: false })
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -33,13 +49,16 @@ export default function SignIn() {
       username: data.get('email'),
       password: data.get('password')
     })
-    .then((response) => {
+    .then(response => {
       const token = createJWTToken(response.data.token)
 
       console.log(token)
 
       setCookie('token', token)
       router.replace('/ui/home');
+    })
+    .catch(err => {
+      setOpenNotification({...openNotification, open: true })
     })
     
     // console.log({
@@ -168,6 +187,22 @@ export default function SignIn() {
         </Container>
       </Box>
       {/* End footer */}
+
+      <Snackbar
+        open={open} 
+        autoHideDuration={6000} 
+        onClose={handleClose}
+        anchorOrigin={{vertical, horizontal}}
+        key={vertical + horizontal}
+      >
+        <Alert 
+          onClose={handleClose} 
+          severity="error"
+          sx={{ width: '100%' }}
+        >
+          Autenticação falhou!
+        </Alert>
+      </Snackbar>
 
     </ThemeProvider>
   );
