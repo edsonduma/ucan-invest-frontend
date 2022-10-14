@@ -22,6 +22,18 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
 import { getCookieFromBrowser } from '../../utils/cookie';
+import { findAllAcademicLevel } from '../../api/academic-levels';
+
+// export async function getStaticProps(context) {
+//   const response = await findAllAcademicLevel()
+//   console.log('getStaticProps', response.data)
+
+//   return {
+//     props: {
+//       "sns": ""
+//     }
+//   }
+// }
 
 // function Copyright(props) {
 //   return (
@@ -45,13 +57,13 @@ const theme = createTheme();
 function getStyles(item, typeOfAccount, theme) {
   return {
     fontWeight:
-    typeOfAccount.indexOf(item) === -1
+      typeOfAccount.indexOf(item) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
 }
 
-export default function NewResearcher() {
+function NewResearcher() {
 
   const errorStatus = {
     message: ['Salvo com sucesso!', 'Erro ao salvar!'],
@@ -63,16 +75,18 @@ export default function NewResearcher() {
     vertical: 'bottom',
     horizontal: 'right'
   })
-  const { vertical, horizontal, open} = openNotification
+  const { vertical, horizontal, open } = openNotification
   const [statusNumber, setStatusNumber] = useState(-1)
 
   const [typeOfAccounts, setTypeOfAccounts] = useState([])
-  const [localities, setLocalities] = useState([])
+  // const [localities, setLocalities] = useState([])
+  const [academicLevels, setAcademicLevels] = useState([])
 
   // data of account
-  const [typeOfAccountSelected, setTypeOfAccountSelected] = useState(1)
+  const [typeOfAccountSelected, setTypeOfAccountSelected] = useState('')
+  const [academicLevelSelected, setAcademicLevelsSelected] = useState('')
   // const [myLocality, setMyLocality] = useState(1)
-  const [district, setDistrict] = useState(1)
+  // const [district, setDistrict] = useState('')
 
   const [account, setAccount] = useState({
     username: '',
@@ -81,16 +95,21 @@ export default function NewResearcher() {
       pkTypeOfAccount: 1
     }
   })
-  
+
+  const [academicLevel, setAcademicLevel] = useState({
+    pkAcademicLevel: 1
+  })
+
   // data of person
   const [person, setPerson] = useState({
     firstname: '',
     lastname: '',
-    nif: '',
+    email: '',
     birthday_date: '',
-    street: '',
-    houseNumber: 0,
-    account: {}
+    // street: '',
+    // houseNumber: '',
+    account: {},
+    academicLevel: {}
   })
   // locality: {
   //   pkLocality: 1
@@ -122,23 +141,32 @@ export default function NewResearcher() {
 
   useEffect(() => {
 
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/academicLevels`, {
+      headers: {
+        "Authorization": getCookieFromBrowser('token')
+      }
+    })
+      .then((response) => {
+        setAcademicLevels(response.data)
+      })
+
     axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/type_of_account`, {
       headers: {
         "Authorization": getCookieFromBrowser('token')
       }
     })
-    .then((response) => {
-      setTypeOfAccounts(response.data)
-    })
+      .then((response) => {
+        setTypeOfAccounts(response.data)
+      })
 
-    axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/places`, {
-      headers: {
-        "Authorization": getCookieFromBrowser('token')
-      }
-    })
-    .then((response) => {
-      setLocalities(response.data)
-    })
+    // axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/places`, {
+    //   headers: {
+    //     "Authorization": getCookieFromBrowser('token')
+    //   }
+    // })
+    //   .then((response) => {
+    //     setLocalities(response.data)
+    //   })
 
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/type_of_account`)
     // .then(res => res.json())
@@ -150,25 +178,25 @@ export default function NewResearcher() {
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/places`)
     // .then(res => res.json())
     // .then(data => setLocalities(data))
-    
+
   }, [])
-  
+
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log('handleSubmit:investigators');
-
+    // console.log('handleSubmit:investigators');
     account.typeOfAccount.pkTypeOfAccount = typeOfAccountSelected
+    academicLevel.pkAcademicLevel = academicLevelSelected
 
     // person.locality.pkLocality = myLocality
     // person.district.pkLocality = district
 
-    console.log('2:data: ',
-      account,
-      'username',
-      account.username,
-      'another data: ',
-      person
-    )
+    // console.log('2:data: ',
+    //   account,
+    //   'username',
+    //   account.username,
+    //   'another data: ',
+    //   person
+    // )
 
     //   firstname,
     //   lastname,
@@ -205,8 +233,8 @@ export default function NewResearcher() {
     //   }
     // })
     person.account = account
-
-    console.log('person.account', person, person.account);
+    person.academicLevel = academicLevel
+    console.log('person', person);
 
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`, {
       method: 'POST',
@@ -218,46 +246,46 @@ export default function NewResearcher() {
         person: person
       })
     }).then(res => res.json())
-    .then(data => {
-      console.log('4:data: ', data, data.status)
+      .then(data => {
+        console.log('4:data: ', data, data.status)
 
-      if (!data.status) {
-        // setFirstname('')
-        // setLastname('')
-        // setNif('')
-        // setBirthdayDate('')
-        // setStreet('')
-        // setHouseNumber('')
+        if (!data.status) {
+          // setFirstname('')
+          // setLastname('')
+          // setNif('')
+          // setBirthdayDate('')
+          // setStreet('')
+          // setHouseNumber('')
 
-        setAccount({
-          username: '',
-          password: '',
-          typeOfAccount: {
-            pkTypeOfAccount: 1
-          }
-        })
-        setPerson({
-          firstname: '',
-          lastname: '',
-          nif: '',
-          birthday_date: '',
-          street: '',
-          houseNumber: 0,
-          locality: {
-            pkLocality: 1
-          },
-          district: {
-            pkLocality: 1
-          },
-          account: {}
-        })
+          setAccount({
+            username: '',
+            password: '',
+            typeOfAccount: {
+              pkTypeOfAccount: 1
+            }
+          })
+          setPerson({
+            firstname: '',
+            lastname: '',
+            email: '',
+            birthday_date: '',
+            street: '',
+            houseNumber: 0,
+            locality: {
+              pkLocality: 1
+            },
+            district: {
+              pkLocality: 1
+            },
+            account: {}
+          })
 
-        // alert('cadastrado com sucesso!')
-        setStatusNumber(0)
-        setOpenNotification({...openNotification, open: true })
+          // alert('cadastrado com sucesso!')
+          setStatusNumber(0)
+          setOpenNotification({ ...openNotification, open: true })
 
-      }
-    })
+        }
+      })
   }
 
   return (
@@ -292,7 +320,7 @@ export default function NewResearcher() {
                   label="Nome"
                   autoFocus
                   value={person.firstname}
-                  onChange={e => setPerson({...person, [e.target.name]: e.target.value})}
+                  onChange={e => setPerson({ ...person, [e.target.name]: e.target.value })}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -304,10 +332,22 @@ export default function NewResearcher() {
                   name="lastname"
                   autoComplete="Digite o Apelido"
                   value={person.lastname}
-                  onChange={e => setPerson({...person, [e.target.name]: e.target.value})}
+                  onChange={e => setPerson({ ...person, [e.target.name]: e.target.value })}
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="exemplo.ucan.edu"
+                  name="email"
+                  autoComplete="Email"
+                  value={person.email}
+                  onChange={e => setPerson({ ...person, [e.target.name]: e.target.value })}
+                />
+              </Grid>
+              {/* <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -316,9 +356,9 @@ export default function NewResearcher() {
                   name="nif"
                   autoComplete="Digite o numero do BI"
                   value={person.nif}
-                  onChange={e => setPerson({...person, [e.target.name]: e.target.value})}
+                  onChange={e => setPerson({ ...person, [e.target.name]: e.target.value })}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -329,8 +369,33 @@ export default function NewResearcher() {
                   id="birthday_date"
                   autoComplete="Digite a Data de Nascimento"
                   value={person.birthday_date}
-                  onChange={e => setPerson({...person, [e.target.name]: e.target.value})}
+                  onChange={e => setPerson({ ...person, [e.target.name]: e.target.value })}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl sx={{ width: 395 }}>
+                  <InputLabel id="academic_level">Nível Academico</InputLabel>
+                  <Select
+                    labelId="nivel-academico"
+                    id="academic_level"
+                    name="academic_level"
+                    value={academicLevelSelected}
+                    onChange={e => setAcademicLevelsSelected(e.target.value)}
+                    input={<OutlinedInput label="Nível Academico" />}
+                  // multiple
+                  // MenuProps={MenuProps}
+                  >
+                    {academicLevels.map(item => (
+                      <MenuItem
+                        key={item.pkAcademicLevel}
+                        value={item.pkAcademicLevel}
+                        style={getStyles(item, academicLevels, theme)}
+                      >
+                        {item.designation}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               {/* <Grid item xs={12}>
                 <FormControl sx={{ width: 395 }}>
@@ -383,7 +448,7 @@ export default function NewResearcher() {
                 </FormControl>
               </Grid> */}
 
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
@@ -392,10 +457,10 @@ export default function NewResearcher() {
                   id="street"
                   autoComplete="street"
                   value={person.street}
-                  onChange={e => setPerson({...person, [e.target.name]: e.target.value})}
+                  onChange={e => setPerson({ ...person, [e.target.name]: e.target.value })}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              </Grid> */}
+              {/* <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
@@ -404,9 +469,9 @@ export default function NewResearcher() {
                   id="houseNumber"
                   autoComplete="houseNumber"
                   value={person.houseNumber}
-                  onChange={e => setPerson({...person, [e.target.name]: e.target.value})}
+                  onChange={e => setPerson({ ...person, [e.target.name]: e.target.value })}
                 />
-              </Grid>
+              </Grid> */}
               {/* <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
@@ -423,7 +488,7 @@ export default function NewResearcher() {
                   name="username"
                   autoComplete="Digite o Nome de Utilizador"
                   value={account.username}
-                  onChange={e => setAccount({...account, [e.target.name]: e.target.value})}
+                  onChange={e => setAccount({ ...account, [e.target.name]: e.target.value })}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -436,7 +501,7 @@ export default function NewResearcher() {
                   type="password"
                   autoComplete="Digite a Senha"
                   value={account.password}
-                  onChange={e => setAccount({...account, [e.target.name]: e.target.value})}
+                  onChange={e => setAccount({ ...account, [e.target.name]: e.target.value })}
                 />
               </Grid>
 
@@ -451,8 +516,8 @@ export default function NewResearcher() {
                     value={typeOfAccountSelected}
                     onChange={e => setTypeOfAccountSelected(e.target.value)}
                     input={<OutlinedInput label="Tipo de Conta" />}
-                    // multiple
-                    // MenuProps={MenuProps}
+                  // multiple
+                  // MenuProps={MenuProps}
                   >
                     {typeOfAccounts.map(item => (
                       <MenuItem
@@ -466,7 +531,7 @@ export default function NewResearcher() {
                   </Select>
                 </FormControl>
               </Grid>
-              
+
             </Grid>
             <Button
               type="submit"
@@ -511,15 +576,15 @@ export default function NewResearcher() {
       {/* End footer */}
 
       <Snackbar
-        open={open} 
-        autoHideDuration={6000} 
+        open={open}
+        autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{vertical, horizontal}}
+        anchorOrigin={{ vertical, horizontal }}
         key={vertical + horizontal}
       >
-        <Alert 
-          onClose={handleClose} 
-          severity={errorStatus.severity[statusNumber]} 
+        <Alert
+          onClose={handleClose}
+          severity={errorStatus.severity[statusNumber]}
           sx={{ width: '100%' }}
         >
           {errorStatus.message[statusNumber]}
@@ -529,3 +594,5 @@ export default function NewResearcher() {
     </ThemeProvider>
   );
 }
+
+export default NewResearcher

@@ -5,7 +5,7 @@ import { findUnpprovedProjects } from "../../api/projects";
 import ProjectCard from "../../components/approve-project/project-card.component";
 import MyAppBar from "../../components/_my-app-bar";
 
-export async function getServerSideProps() {  
+export async function getServerSideProps(context) {  
   const response = await findUnpprovedProjects()
   const unpprovedProjects = response.data
 
