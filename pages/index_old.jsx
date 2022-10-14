@@ -21,7 +21,6 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { borderRadius } from '@mui/system';
 import axios from 'axios';
-import Projects from './ui/projects';
 
 // function Copyright() {
 //   return (
@@ -48,7 +47,6 @@ export default function Home() {
 
     axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
     .then((response) => {
-      console.log(response.data)
       setProjects(response.data)
     })
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
@@ -154,7 +152,7 @@ export default function Home() {
           <Container sx={{ py: 8 }} maxWidth="md">
             {/* End hero unit */}
             <Grid container spacing={4}>
-              {projects.filter((project) => project.approved).map(item => (
+              {projects.map(item => (
                 <Grid item key={item.pkProject} xs={12} sm={6} md={4}>
                   <Card
                     sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
@@ -209,8 +207,36 @@ export default function Home() {
         {/* </Typography>
         <Copyright />
       </Box> */}
-      {/* End footer */}      
-      <Projects />
+      {/* End footer */}
+
+      <br />
+      <br />
+      <br />
+      <br />
+      
+      {/* Footer */}
+      <Box
+        component="footer"
+        sx={{
+          py: 3,
+          px: 2,
+          mt: 'auto',
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'light'
+              ? theme.palette.grey[200]
+              : theme.palette.grey[800],
+        }}
+        style={{ 
+          position: 'fixed',
+          bottom: '0px', 
+          width: '100%'
+        }}
+      >
+        <Container maxWidth="sm">
+          <Copyright />
+        </Container>
+      </Box>
+      {/* End footer */}
 
     </ThemeProvider>
   );

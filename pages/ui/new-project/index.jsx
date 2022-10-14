@@ -18,6 +18,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
 import { getCookieFromBrowser } from '../../../utils/cookie';
+import { useRouter } from 'next/router';
 
 // function Copyright() {
 //   return (
@@ -41,7 +42,8 @@ const steps = ['Dados do Projecto', 'Centros e Colaboradores', 'Rever os Dados']
 const theme = createTheme();
 
 export default function NewProject() {
-
+  
+  const router = useRouter()
   const errorStatus = {
     message: ['Salvo com sucesso!', 'Erro ao salvar!'],
     severity: ['success', 'error']
@@ -63,7 +65,7 @@ export default function NewProject() {
   const [projectData, setProjectData] = useState({
     title: '',
     subtitle: '',
-    pdfFile: '',
+    cover: '',
     teamLeader: {
       pkInvestigator: '',
     },
@@ -71,7 +73,14 @@ export default function NewProject() {
     guestsInvestigators: []
   })
 
-  const handleClose = () => setOpenNotification({ ...openNotification, open: false })
+  // const handleClose = () => setOpenNotification({ ...openNotification, open: false })
+  const handleClose = () => {
+    setOpenNotification({ ...openNotification, open: false })
+
+    setTimeout(() => {
+      router.replace('/ui/home')
+    }, 1000 * 3)
+  }
 
   useEffect(() => {
 
@@ -144,6 +153,8 @@ export default function NewProject() {
   };
 
   const handleSubmit = () => {
+
+    projectData.cover = projectData.cover.substring(12)
 
     fetch(
       `${process.env.NEXT_PUBLIC_BASE_URI}/projects`,
@@ -236,7 +247,7 @@ export default function NewProject() {
 
       {/* Footer */}
       <Box
-        style={{ marginTop: '14vh' }}
+        // style={{ marginTop: '14vh' }}
         component="footer"
         sx={{
           py: 3,
@@ -246,6 +257,11 @@ export default function NewProject() {
             theme.palette.mode === 'light'
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
+        }}
+        style={{ 
+          position: 'absolute',
+          bottom: '0px', 
+          width: '100%'
         }}
       >
         <Container maxWidth="sm">

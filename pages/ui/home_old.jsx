@@ -21,6 +21,7 @@ import Copyright from '/components/_copyright';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 // function Copyright() {
 //   return (
@@ -39,8 +40,9 @@ import axios from 'axios';
 
 const theme = createTheme();
 
-export default function Album() {
+export default function Project() {
 
+  const router = useRouter()
   const [projects, setProjects] = useState([])
 
   useEffect(() => {
@@ -49,6 +51,10 @@ export default function Album() {
     .then((response) => {
       setProjects(response.data)
     })
+    // .catch(err => {
+    //   console.error(err);
+    //   router.replace('/')
+    // })
 
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
     // .then(res => res.json())
@@ -163,6 +169,11 @@ export default function Album() {
 
       {/* </Box> */}
 
+      <br />
+      <br />
+      <br />
+      <br />
+
       <Box
         component="footer"
         sx={{
@@ -173,6 +184,11 @@ export default function Album() {
             theme.palette.mode === 'light'
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
+        }}
+        style={{ 
+          position: 'fixed',
+          bottom: '0px', 
+          width: '100%'
         }}
       >
         <Container maxWidth="sm">
