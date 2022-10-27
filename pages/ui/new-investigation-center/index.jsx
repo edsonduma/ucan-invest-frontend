@@ -19,6 +19,7 @@ import axios from 'axios';
 import { getCookieFromBrowser } from '../../../utils/cookie';
 import { Snackbar } from '@mui/material';
 import { useRouter } from 'next/router';
+import { saveInvestigationCenter, uploadImage } from '../../../api/centers';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -39,16 +40,17 @@ export default function NewCenter() {
   const [centerData, setCenterData] = useState({
     designation: "",
     description: "",
+    image: "",
     centerLeader: {
-      pkInvestigator: 0,
+      pkInvestigator: '',
     },
     faculties: {
-      pkCollege: 0,
+      pkCollege: '',
     },
     members: [],
     areaOfActivities: []
   })
-  
+
   // handleSubmit and fix errors
   const errorStatus = {
     message: ['Salvo com sucesso!', 'Erro ao salvar!'],
@@ -60,7 +62,7 @@ export default function NewCenter() {
     vertical: 'bottom',
     horizontal: 'right'
   })
-  const { vertical, horizontal, open} = openNotification
+  const { vertical, horizontal, open } = openNotification
   const [statusNumber, setStatusNumber] = useState(-1)
   const [submitSuccess, setSubmitSuccess] = useState(false)
 
@@ -76,12 +78,12 @@ export default function NewCenter() {
 
     axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`, {
       headers: {
-         "Authorization": getCookieFromBrowser('token') 
+        "Authorization": getCookieFromBrowser('token')
       }
-   })
-    .then((response) => {
-      setInvestigators(response.data)
     })
+      .then((response) => {
+        setInvestigators(response.data)
+      })
 
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
     //   .then(res => res.json())
@@ -98,7 +100,7 @@ export default function NewCenter() {
         setCenterLeaderName(e.person.firstname + ' ' + e.person.lastname)
     })
   }, [centerData.centerLeader.pkInvestigator])
-  
+
   useEffect(() => {
     if (activeStep === steps.length) handleSubmit()
   }, [activeStep])
@@ -107,21 +109,21 @@ export default function NewCenter() {
     switch (step) {
       case 0:
         return <CenterData
-                investigators={investigators}
-                centerData={centerData}
-                setCenterData={setCenterData}
-              />;
+          investigators={investigators}
+          centerData={centerData}
+          setCenterData={setCenterData}
+        />;
       case 1:
         return <AddInvestigadors
-                investigators={investigators}
-                centerData={centerData}
-                setCenterData={setCenterData}
-              />;
+          investigators={investigators}
+          centerData={centerData}
+          setCenterData={setCenterData}
+        />;
       case 2:
         return <Review
-                centerData={centerData}
-                centerLeaderName={centerLeaderName}
-              />;
+          centerData={centerData}
+          centerLeaderName={centerLeaderName}
+        />;
       default:
         throw new Error('Passo desconhecido');
     }
@@ -135,35 +137,25 @@ export default function NewCenter() {
     setActiveStep(activeStep - 1);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    const savedCenter = await saveInvestigationCenter(centerData,
+      getCookieFromBrowser('token'),
+      setStatusNumber,
+      setCenterNumber,
+      setSubmitSuccess,
+      setOpenNotification,
+      openNotification)
 
-    fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters`,
-      {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": getCookieFromBrowser('token')
-      },
-      body: JSON.stringify(centerData)
-    }).then(res => res.json())
-      .then(data => {
-        console.log('11:data.status: ', data.status)
-        if (data.status) {
-          // console.log('11:data error: ', data)
-          setStatusNumber(1)
-        } else {
-          console.log('11:data: ', data)
-          setCenterNumber(data.pkInvestigationCenter)
-          setStatusNumber(0)
-          setSubmitSuccess(true)
-        }
-        setOpenNotification({...openNotification, open: true })
-      }).catch(error => {
-        console.log('11:error ', error)
-        alert('Ocorreu um erro no servidor!')
-        throw (error)
-      })
+      setCenterNumber(savedCenter.pkInvestigationCenter)
+
+    console.log('savedCenter', savedCenter)
+    console.log('centerNumber', centerNumber)
+
+    let imageData = new FormData()
+    imageData.append('file', centerData.image)
+    
+
+    uploadImage(savedCenter.pkInvestigationCenter, getCookieFromBrowser('token'), imageData)
 
   }
 
@@ -205,15 +197,15 @@ export default function NewCenter() {
                 <Typography variant="h5" gutterBottom>
                   {
                     submitSuccess ?
-                    'Cadastro concluido.'
-                    :
-                    'Em processamento...'
+                      'Cadastro concluido.'
+                      :
+                      'Em processamento...'
                   }
                 </Typography>
                 {submitSuccess &&
-                <Typography variant="subtitle1">
-                  O centro número #{centerNumber} foi criado com sucesso.
-                </Typography>
+                  <Typography variant="subtitle1">
+                    O centro número #{centerNumber} foi criado com sucesso.
+                  </Typography>
                 }
               </React.Fragment>
             ) : (
@@ -241,7 +233,7 @@ export default function NewCenter() {
         {/* <Copyright /> */}
         {/* <Copyright sx={{ mt: 22, mb: 4 }} /> */}
       </Container>
-      
+
       {/* Footer */}
       <Box
         style={{ marginTop: '14vh' }}
@@ -263,22 +255,22 @@ export default function NewCenter() {
       </Box>
       {/* End footer */}
 
-      <Snackbar 
-        open={open} 
-        autoHideDuration={6000} 
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{vertical, horizontal}}
+        anchorOrigin={{ vertical, horizontal }}
         key={vertical + horizontal}
       >
-        <Alert 
-          onClose={handleClose} 
-          severity={errorStatus.severity[statusNumber]} 
+        <Alert
+          onClose={handleClose}
+          severity={errorStatus.severity[statusNumber]}
           sx={{ width: '110%' }}
         >
           {errorStatus.message[statusNumber]}
         </Alert>
       </Snackbar>
-      
+
     </ThemeProvider>
   );
 }

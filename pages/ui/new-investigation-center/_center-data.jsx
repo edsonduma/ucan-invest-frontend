@@ -25,6 +25,14 @@ export default function CenterData({ investigators, centerData, setCenterData })
 
   const [colleges, setColleges] = useState([])
 
+  const handleChange = name  => event => {
+    const value = name === 'image' ? 
+    event.target.files[0] : 
+    event.target.value
+
+    setCenterData({...centerData, [name]: value})
+  }
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/faculties`, {
       headers: {
@@ -113,11 +121,11 @@ export default function CenterData({ investigators, centerData, setCenterData })
               name="faculties"
               value={centerData?.faculties.pkCollege}
               onChange={e => setCenterData({
-                  ...centerData,
-                  faculties: {
-                    pkCollege: e.target.value
-                  }
-                })}
+                ...centerData,
+                faculties: {
+                  pkCollege: e.target.value
+                }
+              })}
               input={<OutlinedInput label="Selecione a Faculdade" />}
             >
               {colleges.map(item => (
@@ -131,6 +139,21 @@ export default function CenterData({ investigators, centerData, setCenterData })
               ))}
             </Select>
           </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            type="file"
+            required
+            id="image"
+            name="image"
+            label="Imagem"
+            fullWidth
+            autoComplete="Imagem"
+            variant="standard"
+            // value={centerData?.image}
+            onChange={handleChange('image')}
+          />
+          <span></span>
         </Grid>
       </Grid>
     </React.Fragment>
