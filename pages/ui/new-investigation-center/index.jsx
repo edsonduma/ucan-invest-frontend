@@ -37,6 +37,10 @@ export default function NewCenter() {
   const [centerLeaderName, setCenterLeaderName] = useState('')
   const [centerNumber, setCenterNumber] = useState('')
 
+  const [uploading, setUploading] = useState(false)
+const [selectedImage, setSelectedImage] = useState('')
+const [selectedFile, setSelectedFile] = useState('')
+
   const [centerData, setCenterData] = useState({
     designation: "",
     description: "",
@@ -62,6 +66,7 @@ export default function NewCenter() {
     vertical: 'bottom',
     horizontal: 'right'
   })
+
   const { vertical, horizontal, open } = openNotification
   const [statusNumber, setStatusNumber] = useState(-1)
   const [submitSuccess, setSubmitSuccess] = useState(false)
@@ -112,6 +117,8 @@ export default function NewCenter() {
           investigators={investigators}
           centerData={centerData}
           setCenterData={setCenterData}
+          setSelectedFile={setSelectedFile}
+          setSelectedImage={setSelectedImage}
         />;
       case 1:
         return <AddInvestigadors
@@ -137,25 +144,42 @@ export default function NewCenter() {
     setActiveStep(activeStep - 1);
   };
 
-  const handleSubmit = async (e) => {
-    const savedCenter = await saveInvestigationCenter(centerData,
-      getCookieFromBrowser('token'),
-      setStatusNumber,
-      setCenterNumber,
-      setSubmitSuccess,
-      setOpenNotification,
-      openNotification)
+  const handleSubmit = async () => {
 
-      setCenterNumber(savedCenter.pkInvestigationCenter)
+    console.log('selectedFile', selectedFile)
+    console.log('selectedImage', selectedImage)
 
-    console.log('savedCenter', savedCenter)
-    console.log('centerNumber', centerNumber)
+    setUploading(true)
 
-    let imageData = new FormData()
-    imageData.append('file', centerData.image)
+    if (!selectedFile) return
+
+      let formData = new FormData()
+      formData.append('file', selectedFile)
+      const { data } = await axios.post(`/api/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      console.log(data)
+
+    setUploading(false)
+
+    // const savedCenter = await saveInvestigationCenter(centerData,
+    //   getCookieFromBrowser('token'),
+    //   setStatusNumber,
+    //   setCenterNumber,
+    //   setSubmitSuccess,
+    //   setOpenNotification,
+    //   openNotification)
+
+      // setCenterNumber(savedCenter.pkInvestigationCenter)
+
+    // console.log('savedCenter', savedCenter)
+    // console.log('centerNumber', centerNumber)
+
     
-
-    uploadImage(savedCenter.pkInvestigationCenter, getCookieFromBrowser('token'), imageData)
+    // imageData.append('file', centerData.image)
+    // uploadImage(savedCenter.pkInvestigationCenter, getCookieFromBrowser('token'), imageData)
 
   }
 

@@ -167,7 +167,7 @@ export default function Home() {
                       }}
                       // image="https://source.unsplash.com/random"
                       // image="logoCEIC.jpg"
-                      image="/img/logoCEIC.jpg"
+                      image="/img/730870d4-6392-4f42-b65a-f39739d132bf-1667355188040.jpg"
                       alt="random"
                     />
                     <CardContent sx={{ flexGrow: 1 }}>

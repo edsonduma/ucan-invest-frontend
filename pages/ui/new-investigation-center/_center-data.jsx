@@ -17,7 +17,7 @@ function getStyles(item, typeOfAccount, theme) {
   };
 }
 
-export default function CenterData({ investigators, centerData, setCenterData }) {
+export default function CenterData({ investigators, centerData, setCenterData, setSelectedFile, setSelectedImage }) {
 
   // const [investigationCenterData, setInvestigationCenterData] = useState({})
   // const [teamLeaderSelected, setTeamLeaderSelected] = useState('')
@@ -25,12 +25,13 @@ export default function CenterData({ investigators, centerData, setCenterData })
 
   const [colleges, setColleges] = useState([])
 
-  const handleChange = name  => event => {
-    const value = name === 'image' ? 
-    event.target.files[0] : 
-    event.target.value
+  const handleChange = ({ target }) => {
 
-    setCenterData({...centerData, [name]: value})
+    if (target.files) {
+      const file = target.files[0]
+      setSelectedImage(URL.createObjectURL(file))
+      setSelectedFile(file)
+    }
   }
 
   useEffect(() => {
@@ -151,7 +152,7 @@ export default function CenterData({ investigators, centerData, setCenterData })
             autoComplete="Imagem"
             variant="standard"
             // value={centerData?.image}
-            onChange={handleChange('image')}
+            onChange={handleChange}
           />
           <span></span>
         </Grid>
