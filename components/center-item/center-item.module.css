@@ -1,0 +1,94 @@
+.centro{
+	width: 20rem;
+	height: 25rem;
+	background-color: rgba(255, 255, 255, 0.5);
+	margin: 2rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	transition: background-color 1s;
+	border-radius: 50px;
+}
+
+.centro:hover div{
+	display: none;
+	
+}
+
+.centro:hover{
+	justify-content: start;
+	background-color: white;
+}
+
+.centro h2{
+	text-align: center;
+	color: black;
+	transition: color 1s;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.centro:hover h2{
+	color: dodgerblue;
+}
+
+.centro div{
+	width: 15em;
+	height:15em;
+	border-radius:100%;
+	background-color: white;
+	background-position: center;
+	background-size: 50%z;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: display 1s;
+}
+
+.centro div img{
+	width: 70%;
+}
+
+.centro:hover ul{
+	display: block;
+}
+
+.centro ul{
+	display: none;
+	list-style-type: none;
+	padding: 0;
+	width: 100%;
+	text-align: center;
+}
+
+.centro ul li{
+	width: 100%;
+	padding: 5% 0;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-size: medium;
+	font-weight: 500;
+}
+
+.centro button{
+	border-radius:50px;
+	border:none;
+	padding:5% 10%;
+	display:none;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-size: medium;
+	font-weight: 500;
+	color:black !important;
+}
+
+.centro:hover button{
+	display:inline-block;
+	color:white;
+}
+
+.centro button:hover{
+	background-color:dodgerblue;
+}
+
+.centro ul li:hover{
+	color: dodgerblue;
+}

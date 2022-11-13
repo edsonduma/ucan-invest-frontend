@@ -37,10 +37,6 @@ export default function NewCenter() {
   const [centerLeaderName, setCenterLeaderName] = useState('')
   const [centerNumber, setCenterNumber] = useState('')
 
-  const [uploading, setUploading] = useState(false)
-const [selectedImage, setSelectedImage] = useState('')
-const [selectedFile, setSelectedFile] = useState('')
-
   const [centerData, setCenterData] = useState({
     designation: "",
     description: "",
@@ -117,8 +113,6 @@ const [selectedFile, setSelectedFile] = useState('')
           investigators={investigators}
           centerData={centerData}
           setCenterData={setCenterData}
-          setSelectedFile={setSelectedFile}
-          setSelectedImage={setSelectedImage}
         />;
       case 1:
         return <AddInvestigadors
@@ -146,40 +140,19 @@ const [selectedFile, setSelectedFile] = useState('')
 
   const handleSubmit = async () => {
 
-    console.log('selectedFile', selectedFile)
-    console.log('selectedImage', selectedImage)
+    const savedCenter = await saveInvestigationCenter(centerData,
+      getCookieFromBrowser('token'),
+      setStatusNumber,
+      setCenterNumber,
+      setSubmitSuccess,
+      setOpenNotification,
+      openNotification)
 
-    setUploading(true)
+      setCenterNumber(savedCenter.pkInvestigationCenter)
 
-    if (!selectedFile) return
-
-      let formData = new FormData()
-      formData.append('file', selectedFile)
-      const { data } = await axios.post(`/api/upload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      })
-      console.log(data)
-
-    setUploading(false)
-
-    // const savedCenter = await saveInvestigationCenter(centerData,
-    //   getCookieFromBrowser('token'),
-    //   setStatusNumber,
-    //   setCenterNumber,
-    //   setSubmitSuccess,
-    //   setOpenNotification,
-    //   openNotification)
-
-      // setCenterNumber(savedCenter.pkInvestigationCenter)
-
-    // console.log('savedCenter', savedCenter)
-    // console.log('centerNumber', centerNumber)
-
-    
-    // imageData.append('file', centerData.image)
-    // uploadImage(savedCenter.pkInvestigationCenter, getCookieFromBrowser('token'), imageData)
+    let imageData = new FormData()
+    imageData.append('file', centerData.image)
+    uploadImage(savedCenter.pkInvestigationCenter, getCookieFromBrowser('token'), imageData)
 
   }
 

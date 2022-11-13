@@ -17,7 +17,7 @@ function getStyles(item, typeOfAccount, theme) {
   };
 }
 
-export default function CenterData({ investigators, centerData, setCenterData, setSelectedFile, setSelectedImage }) {
+export default function CenterData({ investigators, centerData, setCenterData }) {
 
   // const [investigationCenterData, setInvestigationCenterData] = useState({})
   // const [teamLeaderSelected, setTeamLeaderSelected] = useState('')
@@ -29,8 +29,7 @@ export default function CenterData({ investigators, centerData, setCenterData, s
 
     if (target.files) {
       const file = target.files[0]
-      setSelectedImage(URL.createObjectURL(file))
-      setSelectedFile(file)
+      setCenterData({...centerData, [target.name]: file})
     }
   }
 
