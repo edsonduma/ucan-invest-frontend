@@ -19,6 +19,7 @@ import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
 import { getCookieFromBrowser } from '../../../utils/cookie';
 import { useRouter } from 'next/router';
+import { saveProject, uploadImage } from '../../../api/projects';
 
 // function Copyright() {
 //   return (
@@ -42,7 +43,7 @@ const steps = ['Dados do Projecto', 'Centros e Colaboradores', 'Rever os Dados']
 const theme = createTheme();
 
 export default function NewProject() {
-  
+
   const router = useRouter()
   const errorStatus = {
     message: ['Salvo com sucesso!', 'Erro ao salvar!'],
@@ -65,7 +66,7 @@ export default function NewProject() {
   const [projectData, setProjectData] = useState({
     title: '',
     subtitle: '',
-    cover: '',
+    cover: "",
     teamLeader: {
       pkInvestigator: '',
     },
@@ -78,7 +79,7 @@ export default function NewProject() {
     setOpenNotification({ ...openNotification, open: false })
 
     setTimeout(() => {
-      router.replace('/ui/home')
+      router.replace('/ui/home/home')
     }, 1000 * 3)
   }
 
@@ -152,37 +153,45 @@ export default function NewProject() {
     setActiveStep(activeStep - 1);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
 
-    projectData.cover = projectData.cover.substring(12)
+    const savedProject = await saveProject(getCookieFromBrowser('token'), setProjectNumber, setStatusNumber,
+      setSubmitSuccess, setOpenNotification, projectData, openNotification)
 
-    fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URI}/projects`,
-      {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": getCookieFromBrowser('token')
-        },
-        body: JSON.stringify(projectData)
-      }).then(res => res.json())
-      .then(data => {
-        // console.log('10:data.status: ', data.status)
-        if (data.status) {
-          // console.log('10:data error: ', data)
-          setStatusNumber(1)
-        } else {
-          // console.log('10:data: ', data)
-          setProjectNumber(data.pkProject)
-          setStatusNumber(0)
-          setSubmitSuccess(true)
-        }
-        setOpenNotification({ ...openNotification, open: true })
-      }).catch(error => {
-        console.log('10:error ', error)
-        alert('Ocorreu um erro no servidor!')
-        throw (error)
-      })
+    let coverData = new FormData()
+    coverData.append('file', projectData.cover)
+
+    uploadImage(savedProject.pkProject, getCookieFromBrowser('token'), coverData)
+
+    // projectData.cover = projectData.cover.substring(12)
+
+    // fetch(
+    //   `${process.env.NEXT_PUBLIC_BASE_URI}/projects`,
+    //   {
+    //     method: 'POST',
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "Authorization": getCookieFromBrowser('token')
+    //     },
+    //     body: JSON.stringify(projectData)
+    //   }).then(res => res.json())
+    //   .then(data => {
+    //     // console.log('10:data.status: ', data.status)
+    //     if (data.status) {
+    //       // console.log('10:data error: ', data)
+    //       setStatusNumber(1)
+    //     } else {
+    //       // console.log('10:data: ', data)
+    //       setProjectNumber(data.pkProject)
+    //       setStatusNumber(0)
+    //       setSubmitSuccess(true)
+    //     }
+    //     setOpenNotification({ ...openNotification, open: true })
+    //   }).catch(error => {
+    //     console.log('10:error ', error)
+    //     alert('Ocorreu um erro no servidor!')
+    //     throw (error)
+    //   })
   }
 
   return (
@@ -258,9 +267,9 @@ export default function NewProject() {
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
         }}
-        style={{ 
+        style={{
           position: 'absolute',
-          bottom: '0px', 
+          bottom: '0px',
           width: '100%'
         }}
       >

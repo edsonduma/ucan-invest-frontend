@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import styles from './Projects.module.css';
 import { getCookieFromBrowser } from '../../../utils/cookie';
+import Image from 'next/image';
 
 export default function Projects() {
 
@@ -79,12 +80,11 @@ export default function Projects() {
             <div className={styles.container_project}>
               {
                 projects.map(item =>
-                  <div 
-                    key={item.pkProject}
-                    className={styles.project}
-                  >
+                  <div key={item.pkProject} className={styles.project}>
                     <div className={styles.foto}>
-                      <img src={`/img/logos/${item.cover}`} alt={item.description} />
+                      {item.image && (<Image src={item.image} alt={item.description} width={200} height={200} />)}
+                      
+                      {/* <img src={`/img/logos/${item.cover}`} alt={item.description} /> */}
                     </div>
                     <div className={styles.descricao}>
                       <h2>{item.title}</h2>
