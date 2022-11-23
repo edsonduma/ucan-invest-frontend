@@ -135,6 +135,7 @@ export default function NewProject() {
                 setProjectData={setProjectData}
               />;
       case 2:
+        console.log('projectData', projectData)
         return <Review
                   projectData={projectData}
                   teamLeaderName={teamLeaderName}
@@ -156,6 +157,8 @@ export default function NewProject() {
 
     projectData.cover = projectData.cover.substring(12)
 
+    // console.log('projectData', projectData)
+
     fetch(
       `${process.env.NEXT_PUBLIC_BASE_URI}/projects`,
       {
@@ -172,7 +175,7 @@ export default function NewProject() {
           // console.log('10:data error: ', data)
           setStatusNumber(1)
         } else {
-          // console.log('10:data: ', data)
+          console.log('10:data: ', data)
           setProjectNumber(data.pkProject)
           setStatusNumber(0)
           setSubmitSuccess(true)
@@ -247,7 +250,7 @@ export default function NewProject() {
 
       {/* Footer */}
       <Box
-        // style={{ marginTop: '14vh' }}
+        style={{ marginTop: '14vh' }}
         component="footer"
         sx={{
           py: 3,
@@ -258,11 +261,11 @@ export default function NewProject() {
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
         }}
-        style={{ 
-          position: 'absolute',
-          bottom: '0px', 
-          width: '100%'
-        }}
+        // style={{ 
+        //   position: 'absolute',
+        //   bottom: '0px', 
+        //   width: '100%'
+        // }}
       >
         <Container maxWidth="sm">
           <Copyright />
