@@ -55,7 +55,7 @@ export default function SignIn() {
       console.log(token)
 
       setCookie('token', token)
-      router.replace('/ui/home');
+      router.replace('/ui/home/home');
     })
     .catch(err => {
       setOpenNotification({...openNotification, open: true })

@@ -48,6 +48,7 @@ export default function Home() {
 
     axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
     .then((response) => {
+      console.log(response.data)
       setProjects(response.data)
     })
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/projects`)
@@ -114,7 +115,101 @@ export default function Home() {
           </Button>
         </Toolbar>
       </AppBar>
+      {/* <main style={{ backgroundColor: 'white' }}> */}
+      <main>
+        {/* Hero unit */}
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+            pt: 8,
+            pb: 6,
+          }}
+        >
+          <Container maxWidth="sm">
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="text.primary"
+              gutterBottom
+            >
+              Projectos de Investigação da UCAN
+            </Typography>
+            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+              Esta é uma pequena apresentação dos vários projectos que a ucan produz no seu dia a dia.
+            </Typography>
+            {/* <Stack
+              sx={{ pt: 4 }}
+              direction="row"
+              spacing={2}
+              justifyContent="center"
+            >
+              <Button variant="contained">Main call to action</Button>
+              <Button variant="outlined">Secondary action</Button>
+            </Stack> */}
+          </Container>
+        </Box>
+
+        {/* <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="mycontent"> */}
+          <Container sx={{ py: 8 }} maxWidth="md">
+            {/* End hero unit */}
+            <Grid container spacing={4}>
+              {projects.filter((project) => project.approved).map(item => (
+                <Grid item key={item.pkProject} xs={12} sm={6} md={4}>
+                  <Card
+                    sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                  >
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        // 16:9
+                        pt: '56.25%',
+                      }}
+                      // image="https://source.unsplash.com/random"
+                      // image="logoCEIC.jpg"
+                      image="/img/730870d4-6392-4f42-b65a-f39739d132bf-1667355188040.jpg"
+                      alt="random"
+                    />
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {/* Projecto { item } */}
+                        Projecto { item.title }
+                      </Typography>
+                      <Typography>
+                        {/* Este é um cartão de mídia. Você pode usar esta seção para descrever o conteúdo. */}
+                        { item.subtitle }
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button size="small">Abrir</Button>
+                      {/* <Button size="small">Edit</Button> */}
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        {/* </Box> */}
+
+      </main>
       
+      {/* Footer */}
+      {/* <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer"> */}
+        {/* <Typography variant="h6" align="center" gutterBottom>
+          Footer
+        </Typography> */}
+        {/* <hr />
+        <Typography
+          variant="subtitle1"
+          align="center"
+          color="text.secondary"
+          component="p"
+        > */}
+          {/* Something here to give the footer a purpose! */}
+        {/* </Typography>
+        <Copyright />
+      </Box> */}
+      {/* End footer */}      
       <Projects />
 
     </ThemeProvider>

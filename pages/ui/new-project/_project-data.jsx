@@ -17,6 +17,16 @@ function getStyles(item, typeOfAccount, theme) {
 }
 
 export default function ProjectData({ investigators, projectData, setProjectData }) {
+
+  const handleChange = ({ target }) => {
+
+    if (target.files) {
+      const file = target.files[0]
+      console.log('file', file)
+      setProjectData({...projectData, [target.name]: file})
+    }
+  }
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -95,13 +105,12 @@ export default function ProjectData({ investigators, projectData, setProjectData
             required
             id="cover"
             name="cover"
+            label="Cover"
             fullWidth
-            // variant="standard"
-            value={projectData?.cover}
-            onChange={e => setProjectData({
-              ...projectData,
-              [e.target.name]: e.target.value
-            })}
+            autoComplete="Cover"
+            variant="standard"
+            // value={centerData?.image}
+            onChange={handleChange}
           />
         </Grid>
         <Grid item xs={12}>

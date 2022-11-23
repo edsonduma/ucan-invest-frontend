@@ -19,6 +19,7 @@ import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
 import { getCookieFromBrowser } from '../../../utils/cookie';
 import { useRouter } from 'next/router';
+import { saveProject, uploadImage } from '../../../api/projects';
 
 // function Copyright() {
 //   return (
@@ -42,7 +43,7 @@ const steps = ['Dados do Projecto', 'Centros e Colaboradores', 'Rever os Dados']
 const theme = createTheme();
 
 export default function NewProject() {
-  
+
   const router = useRouter()
   const errorStatus = {
     message: ['Salvo com sucesso!', 'Erro ao salvar!'],
@@ -54,7 +55,7 @@ export default function NewProject() {
     vertical: 'bottom',
     horizontal: 'right'
   })
-  const { vertical, horizontal, open} = openNotification
+  const { vertical, horizontal, open } = openNotification
   const [statusNumber, setStatusNumber] = useState(-1)
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const [teamLeaderName, setTeamLeaderName] = useState('')
@@ -65,7 +66,7 @@ export default function NewProject() {
   const [projectData, setProjectData] = useState({
     title: '',
     subtitle: '',
-    cover: '',
+    cover: "",
     teamLeader: {
       pkInvestigator: '',
     },
@@ -78,21 +79,21 @@ export default function NewProject() {
     setOpenNotification({ ...openNotification, open: false })
 
     setTimeout(() => {
-      router.replace('/ui/home')
+      router.replace('/ui/home/home')
     }, 1000 * 3)
   }
 
   useEffect(() => {
 
     axios.get(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`,
-     { 
-      headers:{
-         "Authorization": getCookieFromBrowser('token') 
-        } 
-    })
-    .then((response) => {
-      setInvestigators(response.data)
-    })
+      {
+        headers: {
+          "Authorization": getCookieFromBrowser('token')
+        }
+      })
+      .then((response) => {
+        setInvestigators(response.data)
+      })
 
     // fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/investigators`)
     //   .then(res => res.json())
@@ -114,7 +115,7 @@ export default function NewProject() {
 
     // console.log('teamLeaderName', teamLeaderName);
   }, [projectData.teamLeader.pkInvestigator])
-  
+
   useEffect(() => {
     // console.log('testando...', activeStep, steps.length);
     if (activeStep === steps.length) handleSubmit()
@@ -124,21 +125,21 @@ export default function NewProject() {
     switch (step) {
       case 0:
         return <ProjectData
-                investigators={investigators}
-                projectData={projectData}
-                setProjectData={setProjectData}
-              />;
+          investigators={investigators}
+          projectData={projectData}
+          setProjectData={setProjectData}
+        />;
       case 1:
-        return <AddCenters 
-                investigators={investigators} 
-                projectData={projectData}
-                setProjectData={setProjectData}
-              />;
+        return <AddCenters
+          investigators={investigators}
+          projectData={projectData}
+          setProjectData={setProjectData}
+        />;
       case 2:
         return <Review
-                  projectData={projectData}
-                  teamLeaderName={teamLeaderName}
-              />;
+          projectData={projectData}
+          teamLeaderName={teamLeaderName}
+        />;
       default:
         throw new Error('Passo desconhecido');
     }
@@ -152,37 +153,45 @@ export default function NewProject() {
     setActiveStep(activeStep - 1);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
 
-    projectData.cover = projectData.cover.substring(12)
+    const savedProject = await saveProject(getCookieFromBrowser('token'), setProjectNumber, setStatusNumber,
+      setSubmitSuccess, setOpenNotification, projectData, openNotification)
 
-    fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URI}/projects`,
-      {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": getCookieFromBrowser('token')
-      },
-      body: JSON.stringify(projectData)
-    }).then(res => res.json())
-      .then(data => {
-        // console.log('10:data.status: ', data.status)
-        if (data.status) {
-          // console.log('10:data error: ', data)
-          setStatusNumber(1)
-        } else {
-          // console.log('10:data: ', data)
-          setProjectNumber(data.pkProject)
-          setStatusNumber(0)
-          setSubmitSuccess(true)
-        }
-        setOpenNotification({...openNotification, open: true })
-      }).catch(error => {
-        console.log('10:error ', error)
-        alert('Ocorreu um erro no servidor!')
-        throw (error)
-      })
+    let coverData = new FormData()
+    coverData.append('file', projectData.cover)
+
+    uploadImage(savedProject.pkProject, getCookieFromBrowser('token'), coverData)
+
+    // projectData.cover = projectData.cover.substring(12)
+
+    // fetch(
+    //   `${process.env.NEXT_PUBLIC_BASE_URI}/projects`,
+    //   {
+    //     method: 'POST',
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "Authorization": getCookieFromBrowser('token')
+    //     },
+    //     body: JSON.stringify(projectData)
+    //   }).then(res => res.json())
+    //   .then(data => {
+    //     // console.log('10:data.status: ', data.status)
+    //     if (data.status) {
+    //       // console.log('10:data error: ', data)
+    //       setStatusNumber(1)
+    //     } else {
+    //       // console.log('10:data: ', data)
+    //       setProjectNumber(data.pkProject)
+    //       setStatusNumber(0)
+    //       setSubmitSuccess(true)
+    //     }
+    //     setOpenNotification({ ...openNotification, open: true })
+    //   }).catch(error => {
+    //     console.log('10:error ', error)
+    //     alert('Ocorreu um erro no servidor!')
+    //     throw (error)
+    //   })
   }
 
   return (
@@ -207,16 +216,16 @@ export default function NewProject() {
                 <Typography variant="h5" gutterBottom>
                   {
                     submitSuccess ?
-                    'Cadastro concluido.'
-                    :
-                    'Em processamento...'
+                      'Cadastro concluido.'
+                      :
+                      'Em processamento...'
                   }
                 </Typography>
                 {submitSuccess &&
-                <Typography variant="subtitle1">
-                  {/* 'O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.' */}
-                  O projecto número #{projectNumber} foi criado com sucesso e será publicado após aprovação do conselho.
-                </Typography>
+                  <Typography variant="subtitle1">
+                    {/* 'O projecto número #1234 foi criado com sucesso e será publicado após aprovação do conselho.' */}
+                    O projecto número #{projectNumber} foi criado com sucesso e será publicado após aprovação do conselho.
+                  </Typography>
                 }
               </React.Fragment>
             ) : (
@@ -258,9 +267,9 @@ export default function NewProject() {
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
         }}
-        style={{ 
+        style={{
           position: 'absolute',
-          bottom: '0px', 
+          bottom: '0px',
           width: '100%'
         }}
       >
@@ -271,16 +280,16 @@ export default function NewProject() {
       </Box>
       {/* End footer */}
 
-      <Snackbar 
-        open={open} 
-        autoHideDuration={6000} 
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{vertical, horizontal}}
+        anchorOrigin={{ vertical, horizontal }}
         key={vertical + horizontal}
       >
-        <Alert 
-          onClose={handleClose} 
-          severity={errorStatus.severity[statusNumber]} 
+        <Alert
+          onClose={handleClose}
+          severity={errorStatus.severity[statusNumber]}
           sx={{ width: '100%' }}
         >
           {errorStatus.message[statusNumber]}
