@@ -136,6 +136,7 @@ export default function NewProject() {
           setProjectData={setProjectData}
         />;
       case 2:
+        console.log('projectData', projectData)
         return <Review
           projectData={projectData}
           teamLeaderName={teamLeaderName}
@@ -256,7 +257,7 @@ export default function NewProject() {
 
       {/* Footer */}
       <Box
-        // style={{ marginTop: '14vh' }}
+        style={{ marginTop: '14vh' }}
         component="footer"
         sx={{
           py: 3,
@@ -267,11 +268,11 @@ export default function NewProject() {
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
         }}
-        style={{
-          position: 'absolute',
-          bottom: '0px',
-          width: '100%'
-        }}
+        // style={{ 
+        //   position: 'absolute',
+        //   bottom: '0px', 
+        //   width: '100%'
+        // }}
       >
         <Container maxWidth="sm">
           <Copyright />
