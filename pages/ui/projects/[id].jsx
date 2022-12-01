@@ -98,7 +98,7 @@ export default function SingleProject() {
                             }
 
                             {singleProject.centers?.map((item, index) =>
-                                <ListItem sx={{ py: 1, px: 0 }}>
+                                <ListItem sx={{ py: 1, px: 0 }} key={index}>
                                     <ListItemText primary={item.designation} secondary={item.description} />
                                     <Typography variant="body2">Centro {index + 1}</Typography>
                                 </ListItem>
@@ -112,7 +112,7 @@ export default function SingleProject() {
                             }
 
                             {singleProject.guestsInvestigators?.map((item, index) =>
-                                <ListItem sx={{ py: 1, px: 0 }}>
+                                <ListItem sx={{ py: 1, px: 0 }} key={index}>
                                     <ListItemText primary={item.person.firstname + ' ' + item.person.lastname} />
                                     <Typography variant="body2">Investigador {index + 1}</Typography>
                                 </ListItem>

@@ -48,9 +48,11 @@ export default function Projects() {
     ).then((response) => {
       console.log('my center: ', response.data);
 
-      response.data.projects.map(item => {
-        console.log('item: ', item, item.cover);
-      })
+      setProjects(response.data.projects)
+
+      // response.data.projects.map(item => {
+      //   console.log('item: ', item, item.cover);
+      // })
     })
   }
 
