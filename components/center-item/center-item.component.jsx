@@ -5,10 +5,15 @@ import styles from './center-item.module.css'
 const CenterItem = (props) => {
     const center = props.center
 
+    // console.log('center', center, center.imageName);
+
     return (
         <div className={styles.centro}>
             <div>
-                <Image src={center.imageName} width={170} height={170} />
+                {
+                    center.imageName && 
+                    <Image src={center.imageName} width={170} height={170} />
+                }
                 {/* <img src="ci1.jpeg"></img> */}
             </div>
             <h2>{center.designation}</h2>
