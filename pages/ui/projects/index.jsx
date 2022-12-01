@@ -28,12 +28,12 @@ export default function Projects() {
   useEffect(() => {
     axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": getCookieFromBrowser('token')
-        }
-      }
+      // {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     "Authorization": getCookieFromBrowser('token')
+      //   }
+      // }
     ).then((response) => {
       // console.log('centers: ', response.data);
       setCenters(response.data)
@@ -42,8 +42,15 @@ export default function Projects() {
 
   const showProjectsById = (pkInvestigationCenter) => {
     console.log('pkProject: ', pkInvestigationCenter);
-    projects.map(item => {
-      console.log('item: ', item, item.cover);
+
+    axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters/${pkInvestigationCenter}`,
+    ).then((response) => {
+      console.log('my center: ', response.data);
+
+      response.data.projects.map(item => {
+        console.log('item: ', item, item.cover);
+      })
     })
   }
 
