@@ -100,8 +100,8 @@ export default function Project() {
                     className={styles.project}
                   >
                     <div className={styles.foto}>
-                      {/* <img src="/img/logos/caricatura_resgatedosvalores.jpeg" alt="myProject" /> */}
-                      <img src={`/img/logos/${item.cover}`} alt={item.description} />
+                      {/* <img src="/img/covers/caricatura_resgatedosvalores.jpeg" alt="myProject" /> */}
+                      <img src={`/img/covers/${item.cover}`} alt={item.description} />
                     </div>
                     <div className={styles.descricao}>
                       <h2>{item.title}</h2>

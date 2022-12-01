@@ -10,6 +10,7 @@ import axios from 'axios';
 import styles from './Projects.module.css';
 import { getCookieFromBrowser } from '../../../utils/cookie';
 import Image from 'next/image';
+import { Link, ListItem, ListItemText } from '@mui/material';
 
 export default function Projects() {
 
@@ -27,12 +28,12 @@ export default function Projects() {
   useEffect(() => {
     axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": getCookieFromBrowser('token')
-        }
-      }
+      // {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     "Authorization": getCookieFromBrowser('token')
+      //   }
+      // }
     ).then((response) => {
       // console.log('centers: ', response.data);
       setCenters(response.data)
@@ -41,8 +42,17 @@ export default function Projects() {
 
   const showProjectsById = (pkInvestigationCenter) => {
     console.log('pkProject: ', pkInvestigationCenter);
-    projects.map(item =>{
-      console.log('item: ', item, item.cover);
+
+    axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URI}/investigationCenters/${pkInvestigationCenter}`,
+    ).then((response) => {
+      console.log('my center: ', response.data);
+
+      setProjects(response.data.projects)
+
+      // response.data.projects.map(item => {
+      //   console.log('item: ', item, item.cover);
+      // })
     })
   }
 
@@ -54,7 +64,7 @@ export default function Projects() {
             <h2>Centros</h2>
             <ul>
               {centers.map(item =>
-                <li key={item.pkProject}>
+                <li key={item.pkInvestigationCenter}>
                   <button
                     className={styles.button}
                     onClick={() => showProjectsById(item.pkInvestigationCenter)}
@@ -80,15 +90,46 @@ export default function Projects() {
             <div className={styles.container_project}>
               {
                 projects.map(item =>
-                  <div key={item.pkProject} className={styles.project}>
+                  <div
+                    key={item.pkProject}
+                    className={styles.project}
+                  >
+                  {/* <div key={item.pkProject} className={styles.project}>
                     <div className={styles.foto}>
-                      {item.image && (<Image src={item.image} alt={item.description} width={200} height={200} />)}
+                      {item.image && (<Image src={item.image} alt={item.description} width={200} height={200} />)} */}
                       
                       {/* <img src={`/img/logos/${item.cover}`} alt={item.description} /> */}
+                    <div className={styles.foto}>
+                      <img src={`/img/covers/${item.cover}`} alt={item.description} />
                     </div>
                     <div className={styles.descricao}>
                       <h2>{item.title}</h2>
-                      <button className={styles.button}>Ver mais</button>
+
+                      {/* <button 
+                        // href={`/ui/projects/${item.pkProject}`}
+                        className={styles.button}
+                        >
+                        Ver mais
+                      </button> */}
+
+                      <Link
+                        // variant="button"
+                        // color="inherit"
+                        // sx={{ my: 1, mx: 1.5 }}
+                        // sx={{ bgcolor: 'primary.main' }}
+                        href={`/ui/projects/${item.pkProject}`}
+                        // passHref
+                      >
+                        {/* Ver mais */}
+                        <ListItem
+                          button
+                          component="a"
+                          className={styles.button}
+                        >
+                          <ListItemText>Ver mais</ListItemText>
+                        </ListItem>
+                      </Link>
+
                     </div>
                   </div>
                 )
@@ -102,7 +143,7 @@ export default function Projects() {
       <br />
       <br />
       <br />
-      
+
       <Box
         component="footer"
         sx={{
@@ -114,9 +155,9 @@ export default function Projects() {
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
         }}
-        style={{ 
+        style={{
           position: 'fixed',
-          bottom: '0px', 
+          bottom: '0px',
           width: '100%'
         }}
       >
