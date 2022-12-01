@@ -22,6 +22,7 @@ function Home() {
         setCenters(data)
       })
   }, [])
+
   return (
     <div style={
       {
